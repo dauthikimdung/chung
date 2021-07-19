@@ -1,0 +1,27 @@
+.map-detail-wrapper {
+  flex: 1;
+  height: 100%;
+  text-align: center;
+}
+#map-detail-table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#map-detail-table td, #map-detail-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#map-detail-table tr:nth-child(even){background-color: #f2f2f2;}
+
+#map-detail-table tr:hover {background-color: #ddd;}
+
+#map-detail-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+}

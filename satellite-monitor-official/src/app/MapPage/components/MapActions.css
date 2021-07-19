@@ -1,0 +1,17 @@
+.map-actions-wrapper {
+  width: 100%;
+  padding: 20px 40px;
+}
+
+.map-actions-items {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.map-actions-items > span {
+  margin-right: 8px;
+}
