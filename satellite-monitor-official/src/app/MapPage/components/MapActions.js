@@ -5,38 +5,32 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { DatePicker, Input, Button, Form } from '../../packages/core/adapters/ant-design';
 
-import { setCenter, setListPolyline, calculate_orbit } from '../../Redux/Position';
+import { setCenter, calculate_orbit } from '../../Redux/Position';
 
-import axios from 'axios';
 
 import moment from 'moment';
-
+import MapFilter from './MapFilter'
 
 const MapActions = () => {
 
     const dispatch = useDispatch();
-    const { center } = useSelector(state => state.positionReducer);
+    const { totalSatellite, baseTotalSatellite, predictPoint} = useSelector(state => state.positionReducer);
 
     const [position, setPosition] = useState({ lat: '', lng: '' });
-    const [listSatellite, setListSatellite] = useState([]);
     const [rangeTime, setRangeTime] = useState([]);
 
 
-    const handleMove = () => {
-
-        if (position.lat === '' || position.lng === '')
-            return;
-
-        let arr = [];
-        arr.push(Number(position.lat));
-        arr.push(Number(position.lng));
-
+    const handleMove = async () => {
+        if (position.lat === '' || position.lng === '') {
+            return;}
+        let arr = [Number(position.lat), Number(position.lng)];
+        await dispatch(setCenter([0,0]));
         dispatch(setCenter(arr));
     }
 
-    const handleOnChange = (value, dateString) => {
-        console.log(value);
-    }
+    // const handleOnChange = (value, dateString) => {
+    //     console.log(value);
+    // }
 
     const handleOnChangeRange = (value, dateString) => {
         if (value !== null && moment() < moment(value[0])) {
@@ -50,8 +44,8 @@ const MapActions = () => {
     const handleGetData = async () => {
 
         let a = {
-            lat: center[0],
-            long: center[1],
+            lat: predictPoint[0],
+            long: predictPoint[1],
             time_start: rangeTime[0] ? rangeTime[0] : '',
             time_end: rangeTime[1] ? rangeTime[1] : ''
         }
@@ -66,16 +60,10 @@ const MapActions = () => {
             <div className='map-actions-items'>
                 <Form layout='inline'>
                     <Form.Item label='Vĩ độ'>
-                        <Input style={{ width: '200px' }} 
-                        onChange={e => setPosition({ ...position, lat: e.target.value })} 
-                        value={center[0]}
-                        />
+                        <Input style={{ width: '200px' }} onChange={e => setPosition({ ...position, lat: e.target.value })}/>
                     </Form.Item>
                     <Form.Item label='Kinh độ'>
-                        <Input style={{ width: '200px' }} 
-                        onChange={e => setPosition({ ...position, lng: e.target.value })}
-                        value={center[1]} 
-                        />
+                        <Input style={{ width: '200px' }} onChange={e => setPosition({ ...position, lng: e.target.value })}/>
                     </Form.Item>
                     <Form.Item>
                         <Button type='primary' ghost onClick={handleMove}>Di chuyển</Button>
@@ -83,13 +71,25 @@ const MapActions = () => {
                 </Form>
             </div>
             <div className='map-actions-items'>
+                <Form layout='inline'>
+                    <Form.Item label='Tọa độ vệ tinh đi qua:'>
+                    </Form.Item>
+                    <Form.Item label='Vĩ độ'>
+                        <Input style={{ width: '170px' }} value={predictPoint[0]}/>
+                    </Form.Item>
+                    <Form.Item label='Kinh độ'>
+                        <Input style={{ width: '170px' }} value={predictPoint[1]}/>
+                    </Form.Item>
+                </Form>
+            </div>
+            {/* <div className='map-actions-items'>
                 <span>Ngày cụ thể: </span>
                 <DatePicker
                     showTime
                     format='DD-MM-YYYY HH:mm:ss'
                     placeholder='Chọn ngày'
                     onChange={handleOnChange} />
-            </div>
+            </div> */}
             <div className='map-actions-items'>
                 <span>Khoảng thời gian: </span>
                 <DatePicker.RangePicker
@@ -99,13 +99,14 @@ const MapActions = () => {
                     //onChange={handleOnChangeRange}
                     onOk={handleOnChangeRange}
                 />
-                <Button type='dashed' onClick={handleGetData}>Lấy dữ liệu</Button>
+                <Button type='primary' onClick={handleGetData}>Lấy dữ liệu</Button>
             </div>
-            <div>
-                {
-                    listSatellite.map((satellite, index) => <p key={index}>{index} --- {satellite.name}</p>)
-                }
+            
+            <div className='map-actions-items'>
+                {/* <MapFilter></MapFilter> */}
+                <strong>&nbsp;&nbsp;Số vệ tinh hiển thị: </strong> &nbsp;&nbsp;{totalSatellite} / {baseTotalSatellite}
             </div>
+            
         </div>
     )
 }

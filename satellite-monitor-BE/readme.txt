@@ -14,7 +14,7 @@ step 4: cho phép chạy môi trường ảo (không lỗi -> bỏ qua bươ�
 -> Set-ExecutionPolicy Unrestricted -Scope Process
 
 step 5: cài đặt các thư viện
--> pip install -r requirements
+-> pip install -r requirements (.txt)
 
 step 6:
 -> cd src

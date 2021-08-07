@@ -21,6 +21,12 @@ export {
     Card,
     message,
     Dropdown,
+    Divider,
 } from 'antd';
 
-export { DownOutlined } from '@ant-design/icons';
+export { DownOutlined, 
+ExclamationCircleOutlined, 
+SyncOutlined, 
+LoadingOutlined, 
+QuestionCircleOutlined,
+CheckCircleOutlined } from '@ant-design/icons';
