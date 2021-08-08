@@ -7,5 +7,8 @@ export {
     setListPosition,
     filterSatellite,
     setUpdateState,
-    setPredictPoint
+    setPredictPoint,
+    setInterfaceMapActionState,
+    setListPredictPoint,
+    setIndexPredictPoint
 } from './PositionSlice';

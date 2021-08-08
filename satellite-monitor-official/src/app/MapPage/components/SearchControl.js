@@ -1,11 +1,12 @@
 import { MapControl, withLeaflet } from 'react-leaflet';
 import { OpenStreetMapProvider, SearchControl } from 'leaflet-geosearch';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { setCenter, setPredictPoint } from '../../Redux/Position';
 import L from 'leaflet' // Thư viện truy vấn ngược Địa điểm theo Tọa độ
 import LCG from 'leaflet-control-geocoder'
-class SearchMap extends MapControl {
 
+class SearchMap extends MapControl {
+    
     constructor(props, context) {
         super(props);
     }
@@ -39,33 +40,7 @@ class SearchMap extends MapControl {
             arr[1] = e.location.x;
             this.props.setCenter(arr);
             this.props.setPredictPoint(arr);
-        });
-        const geocoder = L.Control.Geocoder.nominatim();
-        let marker;
-        map.on("click", e => {
-        console.log( map.getZoom())
-        geocoder.reverse(
-            e.latlng,
-            map.options.crs.scale(map.getZoom()),
-            (results) => {
-            var r = results[0];
-            console.log(results)
-            if (r) {
-                if (marker) {
-                marker
-                    .setLatLng(r.center)
-                    .setPopupContent(r.html || r.name)
-                    .openPopup();
-                } else {
-                marker = L.marker(r.center)
-                    .bindPopup(r.name)
-                    .addTo(map)
-                    .openPopup();
-                }
-            }
-            }
-        );
-        });
+        });        
     }
 }
 // Thêm các hàm chức năng

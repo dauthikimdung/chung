@@ -94,7 +94,7 @@ const MapDetail = () => {
                 <td><strong>Location</strong></td>
             </tr>
             {
-                listPosition.length != 0 ?
+                listPosition.length !== 0 ?
                 listPosition.map((item, index) => <OneSateOfSatellite item={item} />)
                 :
                 <>

@@ -1,5 +1,5 @@
 import { createSlice } from '../../packages/core/adapters/redux-toolkit';
-
+import L from 'leaflet'
 import { calculate_orbit, getSatelliteInfo, updateSatelliteDatabase, stopUpdateSatelliteDatabase } from './positionAction';
 
 const positionSlice = createSlice({
@@ -27,6 +27,11 @@ const positionSlice = createSlice({
         updateResponse: {'status': true, 'count': 0},
         // Kết quả của stop update
         stopUpdateState: true,
+        // Danh sách các điểm để dự đoán vệ tinh đi qua 
+        listPredictPoint: [],
+        // Quy định giao diện chọn 1 điểm hay nhiều điểm: true : 1 điểm, false: nhiều điểm
+        interfaceMapActionState: true,
+        indexPredictPoint: 0
     },
     reducers: {
         setPredictPoint: (state, action) => {
@@ -59,8 +64,20 @@ const positionSlice = createSlice({
         },
         setUpdateState: (state, action) => {
             state.updateState = action.payload;
-            console.log(state.updateState)
-        }
+            // console.log(state.updateState)
+        },
+        setListPredictPoint: (state, action) => {
+            state.listPredictPoint[action.payload.index] = action.payload.point;
+            console.log(action.payload.index, action.payload.point)
+        },
+        setIndexPredictPoint: (state, action) => {
+            state.indexPredictPoint = action.payload;
+            // console.log(action.payload)
+        },
+        setInterfaceMapActionState: (state, action) => {
+            state.interfaceMapActionState = action.payload;
+            // console.log(state.interfaceMapActionState)
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(calculate_orbit.fulfilled, (state, action) => {
@@ -98,6 +115,9 @@ export const {
     setListPosition,
     filterSatellite,
     setUpdateState,
-    setPredictPoint
+    setPredictPoint,
+    setListPredictPoint,
+    setInterfaceMapActionState,
+    setIndexPredictPoint,
 } = positionSlice.actions;
 export default positionSlice.reducer;

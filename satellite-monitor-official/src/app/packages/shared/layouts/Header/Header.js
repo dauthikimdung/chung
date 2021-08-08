@@ -3,11 +3,12 @@ import { Menu, Dropdown, DownOutlined, Checkbox, Modal,
 ExclamationCircleOutlined, SyncOutlined, QuestionCircleOutlined, CheckCircleOutlined } from '../../../core/adapters/ant-design';
 import React, { useState } from 'react'; 
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSatelliteDatabase, setUpdateState, stopUpdateSatelliteDatabase } from '../../../../Redux/Position';
+import { updateSatelliteDatabase, setUpdateState, 
+stopUpdateSatelliteDatabase , setInterfaceMapActionState, setIndexPredictPoint} from '../../../../Redux/Position';
 const Header = () => {
     const dispatch = useDispatch()
     const [autoUpdate, setAutoUpdate] = useState(true)
-    const {updateState} = useSelector(state => state.positionReducer)
+    const {updateState, interfaceMapActionState, indexPredictPoint} = useSelector(state => state.positionReducer)
 
     //// Modal update
     const [modalUpdateVisible, setVisible_ModalUpdate] = useState(false);
@@ -179,7 +180,12 @@ const Header = () => {
                 </Menu.Item>
             </Menu>
         );
-
+    const changeActionMode = () => {
+        dispatch(setInterfaceMapActionState(!interfaceMapActionState))
+        if(!interfaceMapActionState){
+            dispatch(setIndexPredictPoint(0))
+        }
+    }
     return (
         <div className='header'>
             <div className='text-header'>
@@ -190,9 +196,12 @@ const Header = () => {
                     <li onClick={showModalUpdate}>
                         Cập nhật dữ liệu
                     </li>
+                    <li onClick={changeActionMode}>
+                        { interfaceMapActionState ? "Chọn 1 điểm" : "Chọn nhiều điểm"}
+                    </li>
                     <li>
                         <Dropdown overlay={menu} placement='bottomLeft' arrow>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center' }} onClick={() => console.log(indexPredictPoint, interfaceMapActionState)}>
                                 Cài đặt
                                 <DownOutlined style={{ fontSize: '1rem', fontWeight: 'bold', padding: '3px 0px 0px 5px' }} />
                             </div>
