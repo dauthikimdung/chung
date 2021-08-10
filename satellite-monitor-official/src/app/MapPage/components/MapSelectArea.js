@@ -1,13 +1,33 @@
 import './MapContent.css';
 import Polyline from 'react-leaflet-arrowheads';
-
-const MapSelectArea = (props) => {
+import { useState, useEffect}  from 'react'
+import { useSelector } from 'react-redux';
+const MapSelectArea = () => {
+    const { coordinateOfMarkers, interfaceMapActionState } = useSelector(state => state.positionReducer);
+    const [ check, setCheck ] = useState(false)
+    useEffect(() => {
+        setCheck(true)
+        coordinateOfMarkers.map(item => {
+            if(item.lat === '' || item.lng === ''){
+                setCheck(false)
+                console.log(check)
+            }            
+        })
+    }, [coordinateOfMarkers])
     return (
-        <Polyline
-            key={Math.random()}
-            positions={props.coordinate.map(item => [item.lat, item.lng])}
-            // arrowheads={{ size: '20px', fill: true, frequency: 'allvertices' }}
-        />
+        <>
+        {
+            (check & !interfaceMapActionState) ?
+                <Polyline
+                        key={Math.random()}
+                        positions={coordinateOfMarkers.map(item => [item.lat, item.lng])}
+                        arrowheads={{ size: '20px', fill: true, frequency: 'allvertices' }}
+            />
+            :
+            <></>
+        }
+        </>
+              
     );
 }
 

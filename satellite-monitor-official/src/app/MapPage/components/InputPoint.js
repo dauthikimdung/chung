@@ -1,11 +1,11 @@
 import './MapActions.css';
 
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux'; //useSelector
+import { useDispatch, useSelector } from 'react-redux'; //useSelector
 
 import { Input, Button, Form } from '../../packages/core/adapters/ant-design';
 
-import { setIndexPredictPoint } from '../../Redux/Position'; //setCenter
+import { setIndexPredictPoint, setCoordinateOfMarkers } from '../../Redux/Position'; //setCenter
 
 const InputPoint = ({ index }) => {
 
@@ -13,7 +13,7 @@ const InputPoint = ({ index }) => {
     // const { listPredictPoint, } = useSelector(state => state.positionReducer);
 
     const [position, setPosition] = useState({ lat: '', lng: '' });
-
+    const {coordinateOfMarkers} = useSelector(state => state.positionReducer)
     const handleClick = () => {
         dispatch(setIndexPredictPoint(index));
     }
@@ -23,6 +23,16 @@ const InputPoint = ({ index }) => {
         else
             return <Button type='primary' ghost onClick={handleClick}> Chọn điểm Trung tâm</Button>
     }
+    const onChangeLat = (e) =>{
+        var temp = JSON.parse(JSON.stringify(coordinateOfMarkers))
+        temp[index].lat = e.target.value
+        dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
+    }
+    const onChangeLng = (e) =>{
+        var temp = JSON.parse(JSON.stringify(coordinateOfMarkers))
+        temp[index].lng = e.target.value
+        dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
+    }
     return (
             <div className='map-actions-items'>
                 <Form layout='inline'>
@@ -30,10 +40,12 @@ const InputPoint = ({ index }) => {
                     {buttonSelect()}
                     </Form.Item>
                     <Form.Item >
-                        <Input placeholder='Vĩ độ' style={{ width: '170px' }} onChange={e => setPosition({ ...position, lat: e.target.value })}/>
+                        <Input placeholder='Vĩ độ' style={{ width: '170px' }} onChange={onChangeLat} 
+                        value={coordinateOfMarkers[index].lat} />
                     </Form.Item>
                     <Form.Item >
-                        <Input placeholder='Kinh độ' style={{ width: '170px' }} onChange={e => setPosition({ ...position, lng: e.target.value })}/>
+                        <Input placeholder='Kinh độ' style={{ width: '170px' }} onChange={onChangeLng}
+                        value={coordinateOfMarkers[index].lng} />
                     </Form.Item>                    
                     <Form.Item>
                     </Form.Item>

@@ -3,7 +3,7 @@ import './MapContent.css';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch, } from 'react-redux';
 
-import { setPredictPoint } from '../../Redux/Position';
+import { setPredictPoint, setCoordinateOfMarkers} from '../../Redux/Position';
 
 import { Map, TileLayer } from '../../packages/core/adapters/leaflet-map';
 import L from 'leaflet'
@@ -19,8 +19,8 @@ const MapContent = (props) => {
     const [zoom, setZoom] = useState(10)
     const [polygon, setPolygon] = useState([])
     const [isInside, setIsInside] = useState(false)
-    const [coordinateOfMarkers, setCoordinateOfMarkers] = useState([])
-    const { center, listSatellite, indexPredictPoint, interfaceMapActionState } = useSelector(state => state.positionReducer);    
+    const { center, listSatellite, indexPredictPoint, 
+    interfaceMapActionState, coordinateOfMarkers } = useSelector(state => state.positionReducer);    
     const [markers, setMarkers] = useState([
         {id: 0, coordinate: {lat:0, lng:0}, marker: L.marker({lat:0, lng:0}), popup: ''},
         {id: 1, coordinate: {lat:0, lng:0}, marker: L.marker({lat:0, lng:0}), popup: ''},
@@ -93,7 +93,7 @@ const MapContent = (props) => {
             setPolygon([[point1.lng,point1.lat], [point3.lng,point3.lat],
             [point2.lng,point2.lat], [point4.lng,point4.lat]])
         }
-        setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp)))
+        dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
     }
     const geocoder = L.Control.Geocoder.nominatim();
 
@@ -101,7 +101,7 @@ const MapContent = (props) => {
         const map = mapRef.current;
         if (map !== null) {
             map.leafletElement.locate();
-            console.log(interfaceMapActionState)
+            // console.log(interfaceMapActionState)
             if (!interfaceMapActionState) {
                 markers.map((item, i) => {
                     if(item.id === indexPredictPoint && item.popup !== '') {
@@ -110,8 +110,10 @@ const MapContent = (props) => {
                         else if (pointInPolygon([markers[4].coordinate.lng,markers[4].coordinate.lat], polygon))
                             item.marker.addTo(map.leafletElement).bindPopup('Điểm trung tâm: ' + item.popup).openPopup()
                     }
-                    else 
+                    else {
                         item.marker.addTo(map.leafletElement)
+                    }
+                        
                 });
                 if (!pointInPolygon([markers[4].coordinate.lng,markers[4].coordinate.lat], polygon)){
                     map.leafletElement.removeLayer(markers[4].marker)
@@ -129,27 +131,27 @@ const MapContent = (props) => {
                 setIsInside(pointInPolygon([markers[4].coordinate.lng,markers[4].coordinate.lat], polygon))
             }
             else {
-                // for(var i in map._layers) {
-                //     if(map._layers[i]._path !== undefined) {
-                //         try {
-                //             map.removeLayer(map._layers[i]);
-                //         }
-                //         catch(e) {
-                //             console.log("problem with " + e + map._layers[i]);
-                //         }
-                //     }
-                // }
+                markers[0].marker.addTo(map.leafletElement).bindPopup(markers[0].popup)
+                if(markers[0].popup !== '')
+                    markers[0].marker.openPopup()
+                markers.map((item, i) => {
+                    if(i !== 0)
+                        map.leafletElement.removeLayer(item.marker)
+                });                
             }
             
         }
-    }, [markers])
+    }, [markers, coordinateOfMarkers])
     //const SearchBar = withLeaflet(SearchMap);
 
 
     const handleClick = (e) => {
         // Nếu là 1 điểm
         if (interfaceMapActionState) {
-            dispatch(setPredictPoint([e.latlng.lat, e.latlng.lng]))
+            // dispatch(setPredictPoint([e.latlng.lat, e.latlng.lng]))
+            let newCoor = JSON.parse(JSON.stringify(coordinateOfMarkers))
+            newCoor[indexPredictPoint] = e.latlng
+            dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(newCoor))))
             updateItem(indexPredictPoint, ['coordinate'],[e.latlng])
             geocoder.reverse(
                 e.latlng,
@@ -168,7 +170,7 @@ const MapContent = (props) => {
         {
             // Nếu đang chọn điểm trung tâm:
             if(indexPredictPoint === 4){                
-                console.log(pointInPolygon([e.latlng.lng,e.latlng.lat], polygon))
+                // console.log(pointInPolygon([e.latlng.lng,e.latlng.lat], polygon))
                 if (!pointInPolygon([e.latlng.lng,e.latlng.lat], polygon)){
                     message.warning({
                         content: 'Vui lòng chọn điểm Trung tâm bên trong khu vực 4 đỉnh đã chọn.',
@@ -181,11 +183,16 @@ const MapContent = (props) => {
                     return
                 }                    
             }
+            if(indexPredictPoint != 4) {
+                let newCoor = JSON.parse(JSON.stringify(coordinateOfMarkers))
+                newCoor[indexPredictPoint] = e.latlng
+                dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(newCoor))))
+            }
             updateItem(indexPredictPoint, ['coordinate'],[e.latlng])
             if (markers[0].coordinate.lat !== 0 && markers[0].coordinate.lng !== 0 &&
                 markers[1].coordinate.lat !== 0 && markers[1].coordinate.lng !== 0 &&
                 markers[2].coordinate.lat !== 0 && markers[2].coordinate.lng !== 0 &&
-                markers[3].coordinate.lat !== 1 && markers[3].coordinate.lng !== 0) {
+                markers[3].coordinate.lat !== 0 && markers[3].coordinate.lng !== 0) {
                 checkPolygon()
             }
             // Nếu đang chọn 1 trong 4 đỉnh hoặc điểm trung tâm nằm bên trong khu vực quan tâm
@@ -215,7 +222,7 @@ const MapContent = (props) => {
                 {
                     listSatellite.map((item, index) => <OneSatelliteOnMap key={index} coordinate={item.coordinate} name={item.name} num={index}/>)
                 }                
-                <MapSelectArea coordinate={coordinateOfMarkers}/>
+                <MapSelectArea />
             </Map>
         </div>
 

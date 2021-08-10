@@ -14,7 +14,7 @@ const MapActions = () => {
 
     const dispatch = useDispatch();
     const { totalSatellite, baseTotalSatellite, 
-        predictPoint, indexPredictPoint, interfaceMapActionState} = useSelector(state => state.positionReducer);
+        coordinateOfMarkers, indexPredictPoint, interfaceMapActionState} = useSelector(state => state.positionReducer);
 
     const [position, setPosition] = useState({ lat: '', lng: '' });
     const [rangeTime, setRangeTime] = useState([]);
@@ -48,8 +48,8 @@ const MapActions = () => {
     const handleGetData = async () => {
         if (interfaceMapActionState) {
             let a = {
-                lat: predictPoint[0],
-                long: predictPoint[1],
+                lat: coordinateOfMarkers[0].lat,
+                long: coordinateOfMarkers[0].lng,
                 time_start: rangeTime[0] ? rangeTime[0] : '',
                 time_end: rangeTime[1] ? rangeTime[1] : ''
             }
@@ -58,10 +58,10 @@ const MapActions = () => {
         }
         else {
             let a = {
-                lat: predictPoint[0],
-                long: predictPoint[1],
-                time_start: rangeTime[0] ? rangeTime[0] : '',
-                time_end: rangeTime[1] ? rangeTime[1] : ''
+                // lat: predictPoint[0],
+                // long: predictPoint[1],
+                // time_start: rangeTime[0] ? rangeTime[0] : '',
+                // time_end: rangeTime[1] ? rangeTime[1] : ''
             }
             console.log(a);
             // dispatch(calculate_orbit(a));
@@ -89,10 +89,10 @@ const MapActions = () => {
                     <Form.Item label='Tọa độ vệ tinh đi qua:'>
                     </Form.Item>
                     <Form.Item>
-                        <Input placeholder='Vĩ độ' style={{ width: '170px' }} value={predictPoint[0] !== 0 ? predictPoint[0] : ''}/>
+                        <Input placeholder='Vĩ độ' style={{ width: '170px' }} value={coordinateOfMarkers[0].lat}/>
                     </Form.Item>
                     <Form.Item>
-                        <Input placeholder='Kinh độ' style={{ width: '170px' }} value={predictPoint[1] !== 0 ? predictPoint[1] : ''}/>
+                        <Input placeholder='Kinh độ' style={{ width: '170px' }} value={coordinateOfMarkers[0].lng}/>
                     </Form.Item>
                 </Form>
             </div>

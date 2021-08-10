@@ -3,7 +3,7 @@ import { Menu, Dropdown, DownOutlined, Checkbox, Modal,
 ExclamationCircleOutlined, SyncOutlined, QuestionCircleOutlined, CheckCircleOutlined } from '../../../core/adapters/ant-design';
 import React, { useState } from 'react'; 
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSatelliteDatabase, setUpdateState, 
+import { updateSatelliteDatabase, setUpdateState, setCoordinateOfMarkers,
 stopUpdateSatelliteDatabase , setInterfaceMapActionState, setIndexPredictPoint} from '../../../../Redux/Position';
 const Header = () => {
     const dispatch = useDispatch()
@@ -184,7 +184,9 @@ const Header = () => {
         dispatch(setInterfaceMapActionState(!interfaceMapActionState))
         if(!interfaceMapActionState){
             dispatch(setIndexPredictPoint(0))
-        }
+            let temp = [{lat:0, lng:0},{lat:0, lng:0},{lat:0, lng:0},{lat:0, lng:0},{lat:0, lng:0}]
+            dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
+        }        
     }
     return (
         <div className='header'>

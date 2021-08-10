@@ -31,7 +31,8 @@ const positionSlice = createSlice({
         listPredictPoint: [],
         // Quy định giao diện chọn 1 điểm hay nhiều điểm: true : 1 điểm, false: nhiều điểm
         interfaceMapActionState: true,
-        indexPredictPoint: 0
+        indexPredictPoint: 0,
+        coordinateOfMarkers: [{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},]
     },
     reducers: {
         setPredictPoint: (state, action) => {
@@ -78,6 +79,10 @@ const positionSlice = createSlice({
             state.interfaceMapActionState = action.payload;
             // console.log(state.interfaceMapActionState)
         },
+        setCoordinateOfMarkers: (state, action) => {
+            state.coordinateOfMarkers = action.payload;
+            // console.log(state.interfaceMapActionState)
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(calculate_orbit.fulfilled, (state, action) => {
@@ -119,5 +124,6 @@ export const {
     setListPredictPoint,
     setInterfaceMapActionState,
     setIndexPredictPoint,
+    setCoordinateOfMarkers
 } = positionSlice.actions;
 export default positionSlice.reducer;

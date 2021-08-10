@@ -10,5 +10,6 @@ export {
     setPredictPoint,
     setInterfaceMapActionState,
     setListPredictPoint,
-    setIndexPredictPoint
+    setIndexPredictPoint,
+    setCoordinateOfMarkers
 } from './PositionSlice';
