@@ -13,8 +13,8 @@ import InputPoint from './InputPoint'
 const MapActions = () => {
 
     const dispatch = useDispatch();
-    const { totalSatellite, baseTotalSatellite, 
-        coordinateOfMarkers, indexPredictPoint, interfaceMapActionState} = useSelector(state => state.positionReducer);
+    const { totalSatellite, baseTotalSatellite, indexPredictPoint,
+        coordinateOfMarkers, interfaceMapActionState} = useSelector(state => state.positionReducer);
 
     const [position, setPosition] = useState({ lat: '', lng: '' });
     const [rangeTime, setRangeTime] = useState([]);
@@ -53,15 +53,12 @@ const MapActions = () => {
                 time_start: rangeTime[0] ? rangeTime[0] : '',
                 time_end: rangeTime[1] ? rangeTime[1] : ''
             }
-            // console.log(a);
+            console.log(a);
             dispatch(calculate_orbit(a));
         }
         else {
             let a = {
-                // lat: predictPoint[0],
-                // long: predictPoint[1],
-                // time_start: rangeTime[0] ? rangeTime[0] : '',
-                // time_end: rangeTime[1] ? rangeTime[1] : ''
+                
             }
             console.log(a);
             // dispatch(calculate_orbit(a));
@@ -124,9 +121,14 @@ const MapActions = () => {
             
             <div className='map-actions-items'>
                 {/* <MapFilter></MapFilter> */}
-                <strong>&nbsp;&nbsp;Số vệ tinh hiển thị: </strong> &nbsp;&nbsp;{totalSatellite} / {baseTotalSatellite}
+                <strong>&nbsp;&nbsp;Số vệ tinh hiển thị: </strong> &nbsp;&nbsp;{totalSatellite} / {baseTotalSatellite}                
             </div>
-            
+            <> {
+                interfaceMapActionState ? <></> 
+                : 
+                <p>Đang chọn điểm <strong>{indexPredictPoint !== 4 ? indexPredictPoint+1 : 'Trung tâm'}</strong></p>
+            }            
+            </>
         </div>
     )
 }

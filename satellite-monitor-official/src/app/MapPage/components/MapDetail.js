@@ -4,8 +4,6 @@ import OneSateOfSatellite from './OneSateOfSatellite';
 const MapDetail = () => {
 
     const { currentSatellite, listPosition } = useSelector(state => state.positionReducer)
-
-    console.log('current: ', currentSatellite);
     return (
         <div className='map-detail-wrapper'>
             <h3>Satellite: {currentSatellite.detail.name} - <strong>{currentSatellite.detail.trvn}</strong></h3>

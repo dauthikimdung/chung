@@ -5,8 +5,7 @@ import { calculate_orbit, getSatelliteInfo, updateSatelliteDatabase, stopUpdateS
 const positionSlice = createSlice({
     name: 'position',
     initialState: {
-        // Tọa độ muốn tiên đoán - Tọa độ muốn kiểm tra các vệ tinh sẽ đi qua trong khoảng thời gian
-        predictPoint: [0, 0],
+        // Tọa độ muốn tiên đoán - Tọa độ muốn kiểm tra các vệ tinh sẽ đi qua trong khoảng thời gian ==> markers[0]
         // Vị trí trung tâm của bản đồ
         center: [21.020243495690448, 105.84110184937984], //[21, 105]
         // Danh sách vệ tinh đi qua tọa độ X trong khoảng thời gian (số lượng dựa trên bộ lọc)

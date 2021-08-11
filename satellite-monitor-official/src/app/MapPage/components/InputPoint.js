@@ -12,7 +12,7 @@ const InputPoint = ({ index }) => {
     const dispatch = useDispatch();
     // const { listPredictPoint, } = useSelector(state => state.positionReducer);
 
-    const [position, setPosition] = useState({ lat: '', lng: '' });
+    // const [position, setPosition] = useState({ lat: '', lng: '' });
     const {coordinateOfMarkers} = useSelector(state => state.positionReducer)
     const handleClick = () => {
         dispatch(setIndexPredictPoint(index));
@@ -40,11 +40,11 @@ const InputPoint = ({ index }) => {
                     {buttonSelect()}
                     </Form.Item>
                     <Form.Item >
-                        <Input placeholder='Vĩ độ' style={{ width: '170px' }} onChange={onChangeLat} 
+                        <Input placeholder='Vĩ độ' style={{ width: '100px' }} onChange={onChangeLat} 
                         value={coordinateOfMarkers[index].lat} />
                     </Form.Item>
                     <Form.Item >
-                        <Input placeholder='Kinh độ' style={{ width: '170px' }} onChange={onChangeLng}
+                        <Input placeholder='Kinh độ' style={{ width: '100px' }} onChange={onChangeLng}
                         value={coordinateOfMarkers[index].lng} />
                     </Form.Item>                    
                     <Form.Item>
