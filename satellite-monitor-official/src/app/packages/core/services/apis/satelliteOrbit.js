@@ -39,3 +39,23 @@ export const stopUpdateDatabase = () => {
         method: 'POST',
     })
 }
+export const calOrbit_all_multipoint = (lat, long, time_start, time_end, obs1, obs2, obs3, obs4) => {
+
+    return api.makeRequest({
+        url: `satellites/track-all-multipoint`,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            lat: lat,
+            long: long,
+            time_start: time_start,
+            time_end: time_end,
+            obs1: obs1,
+            obs2: obs2,
+            obs3: obs3,
+            obs4: obs4
+        }
+    })
+}

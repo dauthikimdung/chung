@@ -103,7 +103,7 @@ const MapContent = (props) => {
         console.log('a: ', coordinateOfMarkers, polygon,pointInPolygon([coordinateOfMarkers[4].lng,coordinateOfMarkers[4].lat], polygon))
         let lat = coordinateOfMarkers[indexPredictPoint].lat
         let lng = coordinateOfMarkers[indexPredictPoint].lng
-        if (lat !== '' && lng != ''){
+        if (lat !== '' && lng !== ''){
             // Nếu đã chọn đủ 4 điểm
             if (coordinateOfMarkers[0].lat !== '' && coordinateOfMarkers[0].lng !== '' &&
                 coordinateOfMarkers[1].lat !== '' && coordinateOfMarkers[1].lng !== '' &&
