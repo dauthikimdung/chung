@@ -71,7 +71,6 @@ def get_one_satellite(id):
 #     return r
 @app.route('/satellites/track-all', methods=['POST'])
 def satellite_track_all():
-    
     try:
         url = 'http://celestrak.com/NORAD/elements/active.txt'
         file = urllib.request.urlopen(url).read().splitlines()
@@ -194,5 +193,179 @@ def stop_update_database():
         return Response(response, mimetype='application/json')
     response = json_util.dumps({'status': False, 'message':'Không có quá trình cập nhật nào!'})
     return Response(response, mimetype='application/json')
+
+def orbit_stl(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2, id):  # hàm tính quỹ đạo vệ tinh
+    # tính bán kính vùng phủ tại thời điểm tt
+    print(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2, id)
+    obs_center.date = tt
+    stl.compute(obs_center)
+    b = R + stl.elevation / 1000  # do cao ve tinh tu tam Trai Dat
+    a = R * math.cos((math.pi / 2) + alpha) + math.sqrt(
+        b ** 2 - (R ** 2) * (math.sin((math.pi / 2) + alpha)) ** 2)
+    radius = (math.acos((R ** 2 + b ** 2 - a ** 2) / (2 * R * b))) * R
+
+    #  tính khoảng cách từ subpoint_stl đến vị trí các đỉnh
+    sublat = math.degrees(stl.sublat)
+    sublong = math.degrees(stl.sublong)
+    lat_radian = sublat * const
+    long_radian = sublong * const
+    distance = []
+    # obs1_lat = '20.25'
+    # obs1_long = '100.6'
+    # obs2_lat = '23.25'
+    # obs2_long = '104.6'
+    # obs3_lat = '28.6'
+    # obs3_long = '104.55'
+    # obs4_lat = '28.6'
+    # obs4_long = '100'
+    for n in [[float(obs1.lat), float(obs1.long)], [float(obs2.lat), float(obs2.long)], 
+    [float(obs3.lat), float(obs3.long)], [float(obs4.lat), float(obs4.long)]]:
+        dlat = float(n[0]) * const - lat_radian
+        dlong = float(n[1]) * const - long_radian
+        a1 = math.sin(dlat / 2) ** 2 + math.cos(lat_radian) * math.cos(
+            float(n[0]) * const) * math.sin(dlong / 2) ** 2
+        a2 = 2 * math.asin(math.sqrt(a1))
+        distance_km = 6371 * a2
+        distance.append(distance_km)
+
+    #  kiểm tra điều kiện đi qua các đỉnh của vùng và tính toán
+    if max(distance) <= radius:
+        name_sate = line[id - 2][2:7]
+        print(name_sate)  # name sate
+        id_str = line[id][2:7]  # lay ra id dang chuoi
+        id_int = int(id_str)  # doi id sang dang integer
+        print(id_int)
+        # print('Maximum elevation:' + str(altt))
+        # print("""Date/Time (UTC+7)   Elev / Azim    Lat / Long	 Alt     Dis    Radius""")
+        # print("""=====================================================================""")
+        coordinates = []
+        sorted_list = sorted([tr, tt, ts, t1, t2])
+        for x in sorted_list:
+            obs_center.date = x  # thời gian tại vị trí quan sát
+            stl.compute(obs_center)  # tính toán ở vị trí quan sát tại thời gian trên
+            trvn = ephem.Date(x + 7 * ephem.hour)
+            str_trvn = "%s" % (trvn)
+
+            # tinh ban kinh vung phu hieu qua cua ve tinh
+            h = R + stl.elevation / 1000  # do cao ve tinh tu tam Trai Dat
+            a = R * math.cos((math.pi / 2) + alpha) + math.sqrt(
+                h ** 2 - (R ** 2) * (math.sin((math.pi / 2) + alpha)) ** 2)
+            radius = (math.acos((R ** 2 + h ** 2 - a ** 2) / (2 * R * h))) * R
+
+            coordinates.append({
+                "id": id_int,
+                "trvn": str_trvn,
+                "alt": math.degrees(stl.alt),
+                "az": math.degrees(stl.az),
+                "lat": math.degrees(stl.sublat),
+                "long": math.degrees(stl.sublong),
+                "elevation": stl.elevation / 1000,
+                "range": stl.range / 1000,
+                "radius": radius,
+                "location": ''
+            })
+    aStatellite = {
+        "name": name_sate,
+        "coordinate": coordinates
+    }
+    # with open('readme.txt', 'w+') as f:
+    #     f.writelines(aStatellite)
+    return aStatellite
+        
+@app.route('/satellites/track-all-multipoint', methods=['POST'])
+def satellite_track_all_multipoint():
+    #  nhập các hằng số
+    alpha = ephem.degrees('45:00:00')  # minimum elevation
+    R = 6371  # ban kinh Trai Dat
+    const = 0.01746031
+    try:
+        url = 'http://celestrak.com/NORAD/elements/active.txt'
+        local_filename, headers = urllib.request.urlretrieve(url,filename="..\\data.txt",)
+        f = open(local_filename, encoding="utf-8")
+        line=f.readlines()
+        # line = [l.decode("utf-8") for l in file]
+        #  tọa độ trung tâm chỉ huy
+        obs_center = ephem.Observer()
+        obs_center.lat = request.json['lat']
+        obs_center.long = request.json['long']
+        # obs_center.lat = '21.1'
+        # obs_center.long = '105.48'
+        #  4 tọa độ ở 4 đỉnh của vùng bảo vệ
+        obs1 = request.json['obs1']
+        obs2 = request.json['obs2']
+        obs3 = request.json['obs3']
+        obs4 = request.json['obs4']
+        # print(obs1, obs2, obs3, obs4)
+        #  nhập thời gian
+        time1_input = request.json['time_start']
+        time2_input = request.json['time_end']
+
+        time1 = datetime.datetime.strptime(time1_input, '%Y-%m-%d %H:%M:%S')
+        time2 = datetime.datetime.strptime(time2_input, '%Y-%m-%d %H:%M:%S')
+        timeutc1 = ephem.Date(time1)
+        timeutc2 = ephem.Date(time2)
+
+        t1 = ephem.Date(timeutc1-7*ephem.hour)
+        t2 = ephem.Date(timeutc2-7*ephem.hour)
+        a = ephem.degrees('10:00:00')
+        
+        result = []
+        for id in range(2, len(line), 3):
+            temp = {}
+            stl = ephem.readtle(line[id - 2], line[id - 1], line[id])
+            obs_center.date = datetime.datetime.utcnow()  # chinh gio ve hien tai ve gio utc
+            try:
+                while obs_center.date < t2:  # số lần đi qua
+                    tr, azr, tt, altt, ts, azs = obs_center.next_pass(stl)
+                    if ts == obs_center.date:
+                        break
+                    if tr <= t2 and ts >= t1 and altt > alpha:   # điều kiện thời gian và góc ngẩng phù hợp
+                        if t1 < tt < t2:
+                            temp = orbit_stl(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2, id)
+                            result.append(temp)
+                        elif tt < t1:
+                            #  chia nhỏ khoảng thời gian khảo sát
+                            delta_t = (ts - tr) / 10
+                            t_detail = t1
+                            m = 0
+                            while t_detail <= ts:
+                                obs_center.date = t_detail
+                                stl.compute(obs_center)
+                                if stl.alt >= alpha:
+                                    temp = orbit_stl(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2, id)
+                                    result.append(temp)
+                                    break
+                                else:
+                                    m += 1
+                                    t_detail = t1 + m * delta_t
+                                    continue
+                        elif tt > t2:
+                            #  chia nhỏ khoảng thời gian khảo sát
+                            delta_t = (ts - tr) / 10
+                            t_detail = tr
+                            m = 0
+                            while t_detail <= t2:
+                                obs_center.date = t_detail
+                                stl.compute(obs_center)
+                                if stl.alt >= alpha:
+                                    temp = orbit_stl(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2, id)
+                                    result.append(temp)
+                                    break
+                                else:
+                                    m += 1
+                                    t_detail = tr + m * delta_t
+                                    continue
+                    obs_center.date = ts
+            except  Exception as e:
+                # print(str(e))
+                continue
+        response = json_util.dumps(result)
+        return Response(response, mimetype='application/json')
+
+    except Exception as e:
+        print(str(e))
+        return json_util.dumps({
+            'message': 'error'
+        })
 if __name__ == "__main__":
     app.run(debug=True)

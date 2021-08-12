@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { DatePicker, Input, Button, Form } from '../../packages/core/adapters/ant-design';
 
-import { setCenter, calculate_orbit } from '../../Redux/Position';
+import { setCenter, calculate_orbit, calculate_orbit_multipoint } from '../../Redux/Position';
 import moment from 'moment';
 import MapFilter from './MapFilter'
 import InputPoint from './InputPoint'
@@ -32,10 +32,6 @@ const MapActions = () => {
         dispatch(setCenter(arr));
     }
 
-    // const handleOnChange = (value, dateString) => {
-    //     console.log(value);
-    // }
-
     const handleOnChangeRange = (value, dateString) => {
         if (value !== null && moment() < moment(value[0])) {
             const start_time = moment(value[0]).format('YYYY-MM-DD HH:mm:ss');
@@ -53,15 +49,20 @@ const MapActions = () => {
                 time_start: rangeTime[0] ? rangeTime[0] : '',
                 time_end: rangeTime[1] ? rangeTime[1] : ''
             }
-            console.log(a);
             dispatch(calculate_orbit(a));
         }
         else {
             let a = {
-                
+                lat: coordinateOfMarkers[4].lat,
+                long: coordinateOfMarkers[4].lng,
+                time_start: rangeTime[0] ? rangeTime[0] : '',
+                time_end: rangeTime[1] ? rangeTime[1] : '',
+                obs1: coordinateOfMarkers[0],
+                obs2: coordinateOfMarkers[1],
+                obs3: coordinateOfMarkers[2],
+                obs4: coordinateOfMarkers[3],
             }
-            console.log(a);
-            // dispatch(calculate_orbit(a));
+            dispatch(calculate_orbit_multipoint(a));
         }
     }
 

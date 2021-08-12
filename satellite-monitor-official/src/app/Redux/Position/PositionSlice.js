@@ -1,6 +1,7 @@
 import { createSlice } from '../../packages/core/adapters/redux-toolkit';
 import L from 'leaflet'
-import { calculate_orbit, getSatelliteInfo, updateSatelliteDatabase, stopUpdateSatelliteDatabase } from './positionAction';
+import { calculate_orbit, getSatelliteInfo, updateSatelliteDatabase, stopUpdateSatelliteDatabase,
+    calculate_orbit_multipoint } from './positionAction';
 
 const positionSlice = createSlice({
     name: 'position',
@@ -108,6 +109,18 @@ const positionSlice = createSlice({
         })
         builder.addCase(stopUpdateSatelliteDatabase.fulfilled, (state, action) => { // Chỉ dùng để debug
             console.log('Message:', action.payload.data.message); 
+        })
+        builder.addCase(calculate_orbit_multipoint.fulfilled, (state, action) => {
+            if (action.payload.data === undefined || 
+                    ('message' in action.payload.data && action.payload.data.message === 'error')){
+                console.log('Error Calculate');
+            }
+            else {
+                state.listSatellite = action.payload.data
+                state.baseListSatellite = action.payload.data
+                state.totalSatellite = state.baseTotalSatellite = state.listSatellite.length;
+            }
+            // console.log('fulfilled', state.baseListSatellite);
         })
     }
 })

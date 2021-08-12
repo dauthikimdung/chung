@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '../../packages/core/adapters/redux-toolkit';
-import { calOrbit_all, calSatellite, updateDatabase, stopUpdateDatabase } from '../../packages/core/services/apis/satelliteOrbit';
+import { calOrbit_all, calSatellite, updateDatabase, stopUpdateDatabase, 
+calOrbit_all_multipoint } from '../../packages/core/services/apis/satelliteOrbit';
 
 const calculate_orbit = createAsyncThunk(
     'position/calOrbitAll',
@@ -37,9 +38,21 @@ const stopUpdateSatelliteDatabase = createAsyncThunk(
         return {data: res};
     }
 )
+const calculate_orbit_multipoint = createAsyncThunk(
+    'position/calOrbitAllMultipoint',
+    async (param, { dispatch, getState }) => {
+        //const center = getState().positionReducer;
+        // console.log('res: ',param);
+        const res = await calOrbit_all_multipoint(param.lat, param.long, param.time_start, param.time_end, 
+                                                    param.obs1, param.obs2, param.obs3, param.obs4);
+        console.log('res: ',res[0]);
+        return {data: res};
+    }
+)
 export {
     calculate_orbit,
     getSatelliteInfo,
     updateSatelliteDatabase,
-    stopUpdateSatelliteDatabase
+    stopUpdateSatelliteDatabase,
+    calculate_orbit_multipoint
 }
