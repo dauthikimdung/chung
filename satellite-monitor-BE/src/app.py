@@ -196,7 +196,6 @@ def stop_update_database():
 
 def orbit_stl(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2, id):  # hàm tính quỹ đạo vệ tinh
     # tính bán kính vùng phủ tại thời điểm tt
-    print(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2, id)
     obs_center.date = tt
     stl.compute(obs_center)
     b = R + stl.elevation / 1000  # do cao ve tinh tu tam Trai Dat
@@ -210,18 +209,11 @@ def orbit_stl(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr
     lat_radian = sublat * const
     long_radian = sublong * const
     distance = []
-    # obs1_lat = '20.25'
-    # obs1_long = '100.6'
-    # obs2_lat = '23.25'
-    # obs2_long = '104.6'
-    # obs3_lat = '28.6'
-    # obs3_long = '104.55'
-    # obs4_lat = '28.6'
-    # obs4_long = '100'
-    for n in [[float(obs1.lat), float(obs1.long)], [float(obs2.lat), float(obs2.long)], 
-    [float(obs3.lat), float(obs3.long)], [float(obs4.lat), float(obs4.long)]]:
-        dlat = float(n[0]) * const - lat_radian
-        dlong = float(n[1]) * const - long_radian
+    for n in [[obs1['lat'], obs1['lng']], [obs2['lat'], obs2['lng']], 
+    [obs3['lat'], obs3['lng']], [obs4['lat'], obs4['lng']]]:
+    # for n in [[obs1_lat, obs1_long], [obs2_lat, obs2_long], [obs3_lat, obs3_long], [obs4_lat, obs4_long]]:
+        dlat = n[0] * const - lat_radian
+        dlong = n[1] * const - long_radian
         a1 = math.sin(dlat / 2) ** 2 + math.cos(lat_radian) * math.cos(
             float(n[0]) * const) * math.sin(dlong / 2) ** 2
         a2 = 2 * math.asin(math.sqrt(a1))
@@ -231,13 +223,9 @@ def orbit_stl(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr
     #  kiểm tra điều kiện đi qua các đỉnh của vùng và tính toán
     if max(distance) <= radius:
         name_sate = line[id - 2][2:7]
-        print(name_sate)  # name sate
         id_str = line[id][2:7]  # lay ra id dang chuoi
         id_int = int(id_str)  # doi id sang dang integer
-        print(id_int)
-        # print('Maximum elevation:' + str(altt))
-        # print("""Date/Time (UTC+7)   Elev / Azim    Lat / Long	 Alt     Dis    Radius""")
-        # print("""=====================================================================""")
+        print(name_sate, id_int)
         coordinates = []
         sorted_list = sorted([tr, tt, ts, t1, t2])
         for x in sorted_list:
@@ -268,8 +256,8 @@ def orbit_stl(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr
         "name": name_sate,
         "coordinate": coordinates
     }
-    # with open('readme.txt', 'w+') as f:
-    #     f.writelines(aStatellite)
+    with open('readme.txt', 'w+') as f:
+        f.writelines(aStatellite)
     return aStatellite
         
 @app.route('/satellites/track-all-multipoint', methods=['POST'])
@@ -280,14 +268,14 @@ def satellite_track_all_multipoint():
     const = 0.01746031
     try:
         url = 'http://celestrak.com/NORAD/elements/active.txt'
-        local_filename, headers = urllib.request.urlretrieve(url,filename="..\\data.txt",)
+        local_filename ="..\\data.txt"
         f = open(local_filename, encoding="utf-8")
         line=f.readlines()
         # line = [l.decode("utf-8") for l in file]
         #  tọa độ trung tâm chỉ huy
         obs_center = ephem.Observer()
-        obs_center.lat = request.json['lat']
-        obs_center.long = request.json['long']
+        obs_center.lat = str(request.json['lat'])
+        obs_center.long = str(request.json['long'])
         # obs_center.lat = '21.1'
         # obs_center.long = '105.48'
         #  4 tọa độ ở 4 đỉnh của vùng bảo vệ
@@ -295,7 +283,6 @@ def satellite_track_all_multipoint():
         obs2 = request.json['obs2']
         obs3 = request.json['obs3']
         obs4 = request.json['obs4']
-        # print(obs1, obs2, obs3, obs4)
         #  nhập thời gian
         time1_input = request.json['time_start']
         time2_input = request.json['time_end']
@@ -357,13 +344,12 @@ def satellite_track_all_multipoint():
                                     continue
                     obs_center.date = ts
             except  Exception as e:
-                # print(str(e))
                 continue
         response = json_util.dumps(result)
         return Response(response, mimetype='application/json')
 
     except Exception as e:
-        print(str(e))
+        print(str("error"))
         return json_util.dumps({
             'message': 'error'
         })
