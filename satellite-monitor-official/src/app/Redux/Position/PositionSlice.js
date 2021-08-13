@@ -99,7 +99,14 @@ const positionSlice = createSlice({
             // console.log('fulfilled', state.baseListSatellite);
         })
         builder.addCase(getSatelliteInfo.fulfilled, (state, action) => {
-            state.currentSatellite.info = action.payload.data;
+            if (action.payload.data === undefined || 
+                    ('message' in action.payload.data && action.payload.data.message === 'error')){
+                console.log('Error Get Satellite Info');
+            }
+            else {
+                state.currentSatellite.info = action.payload.data;
+            }
+            
             // console.log('fulfilled', state.currentSatellite.info);
         })
         builder.addCase(updateSatelliteDatabase.fulfilled, (state, action) => {
