@@ -25,12 +25,12 @@ const InputPoint = ({ index }) => {
     }
     const onChangeLat = (e) =>{
         var temp = JSON.parse(JSON.stringify(coordinateOfMarkers))
-        temp[index].lat = parseFloat(e.target.value)
+        temp[index].lat = e.target.value
         dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
     }
     const onChangeLng = (e) =>{
         var temp = JSON.parse(JSON.stringify(coordinateOfMarkers))
-        temp[index].lng = parseFloat(e.target.value)
+        temp[index].lng = e.target.value
         dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
     }
     return (

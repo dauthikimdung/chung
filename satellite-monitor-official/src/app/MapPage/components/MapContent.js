@@ -3,7 +3,7 @@ import './MapContent.css';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch, } from 'react-redux';
 
-import { setPredictPoint, setCoordinateOfMarkers} from '../../Redux/Position';
+import { setPredictPoint, setCoordinateOfMarkers, setIsInside} from '../../Redux/Position';
 
 import { Map, TileLayer } from '../../packages/core/adapters/leaflet-map';
 import L from 'leaflet'
@@ -19,8 +19,8 @@ const MapContent = (props) => {
     const [zoom, setZoom] = useState(10)
     const [polygon, setPolygon] = useState([])
     const [polygonDisplay, setPolygonDisplay] = useState([])
-    const [isInside, setIsInside] = useState(false)
-    const { center, listSatellite, indexPredictPoint, 
+    const [checkIsInside, setCheckIsInside] = useState(false)
+    const { center, listSatellite, indexPredictPoint, isInside, 
     interfaceMapActionState, coordinateOfMarkers } = useSelector(state => state.positionReducer);
     const [markers, setMarkers] = useState([
         {id: 0, marker: L.marker({lat:0, lng:0}), popup: ''},
@@ -66,10 +66,10 @@ const MapContent = (props) => {
     }
     
     const checkPolygon = () =>{
-        let point1 = coordinateOfMarkers[0]
-        let point2 = coordinateOfMarkers[1]
-        let point3 = coordinateOfMarkers[2]
-        let point4 = coordinateOfMarkers[3]
+        let point1 = {lat: parseFloat(coordinateOfMarkers[0].lat), lng: parseFloat(coordinateOfMarkers[0].lng)}
+        let point2 = {lat: parseFloat(coordinateOfMarkers[1].lat), lng: parseFloat(coordinateOfMarkers[1].lng)}
+        let point3 = {lat: parseFloat(coordinateOfMarkers[2].lat), lng: parseFloat(coordinateOfMarkers[2].lng)}
+        let point4 = {lat: parseFloat(coordinateOfMarkers[3].lat), lng: parseFloat(coordinateOfMarkers[3].lng)}
         let line12 = straightLine(point1, point2) // tìm đường thẳng đi qua 2 điểm 1, 2
         let temp1 = (line12.a * point3.lng - point3.lat + line12.b)
         let temp2 = (line12.a * point4.lng - point4.lat + line12.b)
@@ -100,7 +100,7 @@ const MapContent = (props) => {
     }
     // Thực thi khi CoordinateOfMarkers thay đổi
     useEffect(() => {
-        console.log('a: ', coordinateOfMarkers, polygon,pointInPolygon([coordinateOfMarkers[4].lng,coordinateOfMarkers[4].lat], polygon))
+        console.log('coordinateOfMarkers')
         let lat = coordinateOfMarkers[indexPredictPoint].lat
         let lng = coordinateOfMarkers[indexPredictPoint].lng
         if (lat !== '' && lng !== ''){
@@ -112,7 +112,7 @@ const MapContent = (props) => {
                 checkPolygon()
             }
             // Nếu đang chọn 1 trong 4 đỉnh hoặc điểm trung tâm nằm bên trong khu vực quan tâm
-            let coordinateCurrentMarker = {lat: lat, lng: lng}
+            let coordinateCurrentMarker = {lat: parseFloat(lat), lng: parseFloat(lng)}
             geocoder.reverse(
                 coordinateCurrentMarker,
                 256 * Math.pow(2, 18),
@@ -127,11 +127,27 @@ const MapContent = (props) => {
             );
         }
     }, [coordinateOfMarkers])
+    useEffect(() => {
+        console.log('polygon:', polygon)
+        dispatch(setIsInside(pointInPolygon([parseFloat(coordinateOfMarkers[4].lng),parseFloat(coordinateOfMarkers[4].lat)], polygon)))
+        setCheckIsInside(!checkIsInside)
+    }, [polygon])
+    useEffect(() => {
+        console.log('isInside:', isInside)
+        if (!isInside && coordinateOfMarkers[4].lng !== '' && coordinateOfMarkers[4].lat !== '' ) {
+            message.warning({
+                content: 'Vui lòng chọn điểm Trung tâm bên trong khu vực 4 đỉnh đã chọn.',
+                key: 'outSide',
+                style: {
+                // marginTop: '10vh',
+                },
+                duration: 1
+            });
+        }
+    }, [checkIsInside])
     // Thực thi khi marker thay đổi
-    useEffect(() => {        
-        setIsInside(pointInPolygon([coordinateOfMarkers[4].lng,coordinateOfMarkers[4].lat], polygon))
-        let tempisInside = pointInPolygon([coordinateOfMarkers[4].lng,coordinateOfMarkers[4].lat], polygon)
-        console.log('b')
+    useEffect(() => {
+        console.log('Markers: ')
         const map = mapRef.current;
         if (map !== null) {
             map.leafletElement.locate();
@@ -141,25 +157,15 @@ const MapContent = (props) => {
                     if(item.id === indexPredictPoint && item.popup !== '') {
                         if (i !== 4)
                             item.marker.addTo(map.leafletElement).bindPopup('Điểm ' + (i + 1) + ': ' + item.popup).openPopup()
-                        else if (tempisInside)
+                        else if (isInside)
                             item.marker.addTo(map.leafletElement).bindPopup('Điểm trung tâm: ' + item.popup).openPopup()
                     }
                     else {
                         item.marker.addTo(map.leafletElement)
                     }
                 });
-                if (!tempisInside){
+                if (!isInside){
                     map.leafletElement.removeLayer(markers[4].marker)
-                    if (indexPredictPoint !== 4 && coordinateOfMarkers[4].lng !== '' && coordinateOfMarkers[4].lat !== '' ) {
-                        message.warning({
-                            content: 'Vui lòng chọn lại điểm Trung tâm bên trong khu vực 4 đỉnh đã chọn.',
-                            key: 'outSide',
-                            style: {
-                            // marginTop: '10vh',
-                            },
-                            duration: 1
-                        });
-                    }
                 }
             }
             else {
@@ -195,7 +201,6 @@ const MapContent = (props) => {
                         },
                         duration: 1.5
                     });
-                    setIsInside(false)
                     return // Thoát sự kiện kích chuột
                 }
             }

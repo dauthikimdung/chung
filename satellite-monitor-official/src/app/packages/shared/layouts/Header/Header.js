@@ -8,7 +8,7 @@ stopUpdateSatelliteDatabase , setInterfaceMapActionState, setIndexPredictPoint} 
 const Header = () => {
     const dispatch = useDispatch()
     const [autoUpdate, setAutoUpdate] = useState(true)
-    const {updateState, interfaceMapActionState, indexPredictPoint} = useSelector(state => state.positionReducer)
+    const {updateState, interfaceMapActionState, indexPredictPoint, coordinateOfMarkers} = useSelector(state => state.positionReducer)
 
     //// Modal update
     const [modalUpdateVisible, setVisible_ModalUpdate] = useState(false);
@@ -184,7 +184,7 @@ const Header = () => {
         dispatch(setInterfaceMapActionState(!interfaceMapActionState))
         if(!interfaceMapActionState){
             dispatch(setIndexPredictPoint(0))
-            let temp = [{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''}]
+            let temp = [coordinateOfMarkers[0],{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''}]
             dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
         }        
     }

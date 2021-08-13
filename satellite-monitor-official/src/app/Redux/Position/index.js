@@ -11,5 +11,6 @@ export {
     setInterfaceMapActionState,
     setListPredictPoint,
     setIndexPredictPoint,
-    setCoordinateOfMarkers
+    setCoordinateOfMarkers,
+    setIsInside
 } from './PositionSlice';

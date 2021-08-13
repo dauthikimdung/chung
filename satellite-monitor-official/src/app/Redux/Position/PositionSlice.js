@@ -32,7 +32,9 @@ const positionSlice = createSlice({
         // Quy định giao diện chọn 1 điểm hay nhiều điểm: true : 1 điểm, false: nhiều điểm
         interfaceMapActionState: true,
         indexPredictPoint: 0,
-        coordinateOfMarkers: [{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},]
+        coordinateOfMarkers: [{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},],
+        // Điểm trung tâm có nằm bên trong 4 đỉnh không
+        isInside: 0,
     },
     reducers: {
         setPredictPoint: (state, action) => {
@@ -81,6 +83,10 @@ const positionSlice = createSlice({
         },
         setCoordinateOfMarkers: (state, action) => {
             state.coordinateOfMarkers = action.payload;
+            // console.log(state.interfaceMapActionState)
+        },
+        setIsInside: (state, action) => {
+            state.isInside = action.payload;
             // console.log(state.interfaceMapActionState)
         },
     },
@@ -143,6 +149,7 @@ export const {
     setListPredictPoint,
     setInterfaceMapActionState,
     setIndexPredictPoint,
-    setCoordinateOfMarkers
+    setCoordinateOfMarkers,
+    setIsInside
 } = positionSlice.actions;
 export default positionSlice.reducer;
