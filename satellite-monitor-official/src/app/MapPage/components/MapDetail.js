@@ -78,7 +78,7 @@ const MapDetail = () => {
                     </tr>
                 </tbody>
             </table>
-            <h3>5 Trạng thái gần nhất của vệ tinh {currentSatellite.detail.name}</h3>
+            <h3>{listPosition.length} Trạng thái gần nhất của vệ tinh {currentSatellite.detail.name}</h3>
             <table>
             <tbody>
             <tr>
@@ -93,9 +93,10 @@ const MapDetail = () => {
             </tr>
             {
                 listPosition.length !== 0 ?
-                listPosition.map((item, index) => <OneSateOfSatellite item={item} />)
+                listPosition.map((item, index) => <OneSateOfSatellite key={`sate ${index} satellite ${currentSatellite.detail.id} `} item={item} />)
                 :
                 <>
+                {}
                     <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                     <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                     <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>

@@ -15,7 +15,7 @@ const OneSatelliteOnMap = ({ num, coordinate, name }) => {
                 )
             }
             <Polyline
-                key={Math.random()}
+                key={`marker ${num}`}
                 positions={coordinate.map(item => [item.lat, item.long])}
                 arrowheads={{ size: '20px', fill: true, frequency: 'allvertices' }}
             />

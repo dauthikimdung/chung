@@ -113,7 +113,7 @@ const Header = () => {
     const [modalNoticeVisible, setVisible_ModalNotice] = useState(false);    
     const [modalNoticeMaskClosable, setModalNoticeMaskClosable] = useState(false)
 
-    // Modal Update - Nội dung
+    // Modal Notice - Nội dung
     const modalNoticeText = () => {
         switch(updateState) {
             case 1: // Tiến trình crawl đang chạy / đang cập nhật dữ liệu
@@ -122,7 +122,7 @@ const Header = () => {
                 return ' Đã dừng quá trình cập nhật dữ liệu!'
         }
     }
-    // Modal Update - Trả về biểu tượng thông báo các loại
+    // Modal Notice - Trả về biểu tượng thông báo các loại
     const modalNoticeIcon = () => {
         switch(updateState) {
             case 1: // Tiến trình crawl đang chạy / đang cập nhật dữ liệu
@@ -131,7 +131,7 @@ const Header = () => {
                 return <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '18px' }}/>
         }
     }
-    // Modal Update - Chữ trên nút OK
+    // Modal Notice - Chữ trên nút OK
     const modalNoticeOkText = () => {
         switch(updateState) {
             case 1: // Tiến trình crawl đang chạy / đang cập nhật dữ liệu
@@ -140,7 +140,7 @@ const Header = () => {
                 return 'Xong'
         }
     }
-    // Modal Update - Chữ trên nút Cancel
+    // Modal Notice - Chữ trên nút Cancel
     const modalNoticeCancelText = () => {
         switch(updateState) {
             case 1: // Tiến trình crawl đang chạy / đang cập nhật dữ liệu

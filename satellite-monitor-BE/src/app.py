@@ -73,7 +73,10 @@ def get_one_satellite(id):
 def satellite_track_all():
     try:
         url = 'http://celestrak.com/NORAD/elements/active.txt'
-        file = urllib.request.urlopen(url).read().splitlines()
+        # file = urllib.request.urlopen(url).read().splitlines()
+        local_filename ="..\\data.txt"
+        f = open(local_filename, encoding="utf-8")
+        file = f.readlines()
         obs = ephem.Observer()
         obs.lat = request.json['lat']
         obs.long = request.json['long']
@@ -135,11 +138,13 @@ def satellite_track_all():
             except  Exception as e:
                 print(str(e))
                 continue
+        f.close()
         response = json_util.dumps(result)
         return Response(response, mimetype='application/json')
 
     except Exception as e:
         print(str(e))
+        f.close()
         return json_util.dumps({
             'message': 'error'
         })
@@ -270,7 +275,7 @@ def satellite_track_all_multipoint():
         url = 'http://celestrak.com/NORAD/elements/active.txt'
         local_filename ="..\\data.txt"
         f = open(local_filename, encoding="utf-8")
-        line=f.readlines()
+        line = f.readlines()
         # line = [l.decode("utf-8") for l in file]
         #  tọa độ trung tâm chỉ huy
         obs_center = ephem.Observer()
@@ -344,12 +349,14 @@ def satellite_track_all_multipoint():
                                     continue
                     obs_center.date = ts
             except  Exception as e:
-                continue
+                continue        
+        f.close()
         response = json_util.dumps(result)
         return Response(response, mimetype='application/json')
 
     except Exception as e:
-        print(str("error"))
+        print(str(e))
+        f.close()
         return json_util.dumps({
             'message': 'error'
         })
