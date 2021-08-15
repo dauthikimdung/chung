@@ -218,7 +218,7 @@ const MapContent = (props) => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                 />
-                <SearchMap />                
+                <SearchMap />
                 {
                     listSatellite.slice(0, 4).map((item, index) => <OneSatelliteOnMap key={`satellite marker ${index}`} coordinate={item.coordinate} name={item.name} num={index}/>)
                 }                

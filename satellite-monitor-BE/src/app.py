@@ -96,11 +96,11 @@ def satellite_track_all():
         result = []
         k = 0
         for id in range(0, len(file), 3):
-            stl = ephem.readtle(file[id].decode('utf-8'),
-                                file[id + 1].decode('utf-8'),
-                                file[id + 2].decode('utf-8'))
+            stl = ephem.readtle(file[id], # .decode('utf-8')
+                                file[id + 1],
+                                file[id + 2])
             obs.date = datetime.datetime.utcnow()
-            id_str = file[id+2].decode('utf-8')[2:7] # lay ra id dang chuoi
+            id_str = file[id+2][2:7] # lay ra id dang chuoi
             id_int = int(id_str) # doi id sang dang integer
             try:
                 while obs.date < t2:
@@ -108,7 +108,7 @@ def satellite_track_all():
                     if ts == obs.date:
                         break
                     if tr <= t2 and ts >= t1 and altt > a:
-                        name_sate = file[id].decode('utf-8')
+                        name_sate = file[id]
                         k = k+1
                         coordinates = []
                         sorted_list = sorted([t1, t2, tr, tt, ts])
@@ -136,7 +136,7 @@ def satellite_track_all():
                     else:
                         obs.date = ts
             except  Exception as e:
-                print(str(e))
+                # print(str(e))
                 continue
         f.close()
         response = json_util.dumps(result)
@@ -166,7 +166,7 @@ def update_database():
         except Exception as ex:
             if (stderr != None): # Nếu stderr != None chứng tỏ tiến trình crawl bị lỗi
                 print(stderr)
-                errMess = base64.b64encode(stderr).decode('utf-8')
+                errMess = base64.b64encode(stderr)
             else:
                 errMess = str(ex)
             print(errMess)
