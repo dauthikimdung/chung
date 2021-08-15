@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector, } from 'react-redux';
 
 import { DatePicker, Input, Button, Form, Modal,
-ExclamationCircleOutlined, SyncOutlined, QuestionCircleOutlined, CheckCircleOutlined, message } from '../../packages/core/adapters/ant-design';
+ExclamationCircleOutlined, SyncOutlined, CheckCircleOutlined, message } from '../../packages/core/adapters/ant-design';
 
-import { setCenter, calculate_orbit, calculate_orbit_multipoint, setCoordinateOfMarkers} from '../../Redux/Position';
+import { setCenter, calculate_orbit, calculate_orbit_multipoint, setGetSatellitesState,
+setCoordinateOfMarkers} from '../../Redux/Position';
 import moment from 'moment';
 import MapFilter from './MapFilter'
 import InputPoint from './InputPoint'
@@ -14,7 +15,7 @@ import InputPoint from './InputPoint'
 const MapActions = () => {
 
     const dispatch = useDispatch();
-    const { totalSatellite, baseTotalSatellite, indexPredictPoint, isInside,
+    const { totalSatellite, baseTotalSatellite, indexPredictPoint, isInside, getSatellitesState,
         coordinateOfMarkers, interfaceMapActionState} = useSelector(state => state.positionReducer);
     const [checkInput, setCheckInput] = useState(true)
     const [position, setPosition] = useState({ lat: '', lng: '' });
@@ -25,6 +26,51 @@ const MapActions = () => {
             intents.push(<InputPoint key= {`point-${i}`} index={i}/>);
         return intents
     }
+    // Modal notice
+    const [modalNoticeVisible, setVisible_ModalNotice] = useState(false);    
+    // const [modalNoticeMaskClosable, setModalNoticeMaskClosable] = useState(false)
+
+    // Modal Notice - Nội dung
+    const modalNoticeText = () => {
+        switch(getSatellitesState) {
+            case 1: // Tiến trình crawl đang chạy / đang Truy vấn dữ liệu
+                return ' Đang truy vấn dữ liệu Vệ tinh!'
+            case 2: // Truy vấn dữ liệu thành công
+                return ' Truy vấn dữ liệu thành công!'
+            case -1: // Tiến trình crawl đang chạy / đang Truy vấn dữ liệu
+                return ' Quá trình truy vấn gặp lỗi!'
+            default: // Còn lại
+                return ' Truy vấn thành công!'
+        }
+    }
+    // Modal Notice - Trả về biểu tượng thông báo các loại
+    const modalNoticeIcon = () => {
+        switch(getSatellitesState) {
+            case 1: // Tiến trình đang chạy / đang Truy vấn dữ liệu
+                return <SyncOutlined spin style={{ color: '#1890ff', fontSize: '18px' }}/>
+            case 2: // Truy vấn dữ liệu thành công
+                return <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '18px' }}/>
+            case -1: // Truy vấn bị lỗi 
+                return <ExclamationCircleOutlined style={{ color: '#fa3014', fontSize: '18px' }}/>
+            default: // Còn lại
+                return <CheckCircleOutlined style={{ color: '#faad14', fontSize: '18px' }}/>
+        }
+    }
+    // Modal Notice - Chữ trên nút OK
+    const modalNoticeOkText = () => {
+        switch(getSatellitesState) {
+            case 1: // Tiến trình crawl đang chạy / đang Truy vấn dữ liệu
+                return 'Đang truy vấn dữ liệu'
+            default: // Còn lại
+                return 'Xong'
+        }
+    }
+
+    // Modal Notice - Xử lý sự kiện bấm nút OK
+    const modalNoticeHandleOk = () => {
+        setVisible_ModalNotice(false)
+        dispatch(setGetSatellitesState(0))
+    };
     const handleMove = async () => {
         if (position.lat === '' || position.lng === '') {
             return;}
@@ -52,6 +98,8 @@ const MapActions = () => {
     }
 
     const handleGetData = async () => {
+        setVisible_ModalNotice(true)
+        dispatch(setGetSatellitesState(1))
         if (interfaceMapActionState) {
             let a = {
                 lat: coordinateOfMarkers[0].lat,
@@ -59,7 +107,7 @@ const MapActions = () => {
                 time_start: rangeTime[0] ? rangeTime[0] : '',
                 time_end: rangeTime[1] ? rangeTime[1] : ''
             }
-            dispatch(calculate_orbit(a));
+            await dispatch(calculate_orbit(a));
         }
         else {
             let a = {
@@ -72,72 +120,11 @@ const MapActions = () => {
                 obs3: coordinateOfMarkers[2],
                 obs4: coordinateOfMarkers[3],
             }
-            dispatch(calculate_orbit_multipoint(a));
+            await dispatch(calculate_orbit_multipoint(a));
         }
     }
-    //// Modal notice
-    // const [modalNoticeVisible, setVisible_ModalNotice] = useState(false);    
-    // const [modalNoticeMaskClosable, setModalNoticeMaskClosable] = useState(false)
-
-    // // Modal Notice - Nội dung
-    // const modalNoticeText = () => {
-    //     switch(getDataState) {
-    //         case 1: // Tiến trình crawl đang chạy / đang cập nhật dữ liệu
-    //             return ' Đang truy vấn dữ liệu Vệ tinh!'
-    //         case -1: // Tiến trình crawl đang chạy / đang cập nhật dữ liệu
-    //             return ' Quá trình truy vấn gặp lỗi!'
-    //         default: // Còn lại
-    //             return ' Truy vấn thành công!'
-    //     }
-    // }
-    // // Modal Notice - Trả về biểu tượng thông báo các loại
-    // const modalNoticeIcon = () => {
-    //     switch(getDataState) {
-    //         case 2: // Cập nhật dữ liệu thành công
-    //             return <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '18px' }}/>
-    //         case -1: // Cập nhật bị lỗi 
-    //             return <ExclamationCircleOutlined style={{ color: '#fa3014', fontSize: '18px' }}/>
-    //         default: // Còn lại
-    //             return <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '18px' }}/>
-    //     }
-    // }
-    // // Modal Notice - Chữ trên nút OK
-    // const modalNoticeOkText = () => {
-    //     switch(getDataState) {
-    //         case 2: // Tiến trình crawl đang chạy / đang cập nhật dữ liệu
-    //             return 'Đang cập nhật'
-    //         default: // Còn lại
-    //             return 'Xong'
-    //     }
-    // }
-    // // Modal Notice - Chữ trên nút Cancel
-    // const modalNoticeCancelText = () => {
-    //     switch(getDataState) {
-    //         case 1: // Tiến trình crawl đang chạy / đang cập nhật dữ liệu
-    //             return 'Không'
-    //         default: // Còn lại
-    //             return 'Thoát'
-    //     }
-    // }
     
-    // // Modal Notice - Xử lý sự kiện bấm nút OK
-    // const modalNoticeHandleOk = async () => {
-    //     if (getDataState === 1){
-    //         await dispatch(stopUpdateSatelliteDatabase())
-    //         dispatch(setUpdateState(0))
-    //         setModalUpdateMaskClosable(true)
-    //         setVisible_ModalUpdate(false)
-    //         setModalNoticeMaskClosable(true)
-    //     }
-    //     else {
-    //         setVisible_ModalNotice(false)
-    //     }
-        
-    // };
-    // // Modal Notice - Xử lý sự kiện bấm nút Cancel
-    // const modalNoticeHandleCancel = () => {
-    //         setVisible_ModalNotice(false)
-    // };
+
     const onChangeLat = (e) =>{
         var temp = JSON.parse(JSON.stringify(coordinateOfMarkers))
         temp[0].lat = e.target.value
@@ -213,21 +200,22 @@ const MapActions = () => {
             }            
             </>
         </div>
-        {/* <Modal //// Modal Notice
-                title="Dừng quá trình cập nhật dữ liệu"
-                visible={modalNoticeVisible}
-                onOk={modalNoticeHandleOk}
-                onCancel={modalNoticeHandleCancel}
-                cancelText={modalNoticeCancelText()}
-                okText={modalNoticeOkText()}
-                okType='danger'
-                maskClosable={modalNoticeMaskClosable}
-            >
-                <p> 
-                    { modalNoticeIcon() }
-                    { modalNoticeText() }
-                </p>
-            </Modal> */}
+        <Modal //// Modal Notice
+            title="Dừng quá trình Truy vấn dữ liệu"
+            visible={modalNoticeVisible}
+            maskClosable={false}
+            closable={false}
+            footer={[
+                <Button key='modal-notice' onClick={modalNoticeHandleOk} loading={getSatellitesState === 1}>
+                    {modalNoticeOkText()}
+                </Button>
+            ]}
+        >
+            <p> 
+                { modalNoticeIcon() }
+                { modalNoticeText() }
+            </p>
+        </Modal>
         </>
     )
 }

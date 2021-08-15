@@ -220,7 +220,7 @@ const MapContent = (props) => {
                 />
                 <SearchMap />
                 {
-                    listSatellite.slice(0, 4).map((item, index) => <OneSatelliteOnMap key={`satellite marker ${index}`} coordinate={item.coordinate} name={item.name} num={index}/>)
+                    listSatellite.map((item, index) => <OneSatelliteOnMap key={`satellite marker ${index}`} coordinate={item.coordinate} name={item.name} num={index}/>)
                 }                
                 <MapSelectArea polygonDisplay={polygonDisplay}/>
             </Map>

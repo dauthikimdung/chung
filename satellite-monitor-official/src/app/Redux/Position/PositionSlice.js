@@ -93,18 +93,23 @@ const positionSlice = createSlice({
             state.isInside = action.payload;
             // console.log(state.interfaceMapActionState)
         },
+        setGetSatellitesState: (state, action) => {
+            state.getSatellitesState = action.payload;
+            // console.log(state.interfaceMapActionState)
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(calculate_orbit.fulfilled, (state, action) => {
             if (action.payload.data === undefined || 
                     ('message' in action.payload.data && action.payload.data.message === 'error')){
                 console.log('Error Calculate');
-                return
+                state.getSatellitesState = -1
             }
             else {
                 state.listSatellite = action.payload.data
                 state.baseListSatellite = action.payload.data
                 state.totalSatellite = state.baseTotalSatellite = state.listSatellite.length;
+                state.getSatellitesState = 2
             }
             // console.log('fulfilled', state.baseListSatellite);
         })
@@ -131,11 +136,13 @@ const positionSlice = createSlice({
             if (action.payload.data === undefined || 
                     ('message' in action.payload.data && action.payload.data.message === 'error')){
                 console.log('Error Calculate');
+                state.getSatellitesState = -1
             }
             else {
                 state.listSatellite = action.payload.data
                 state.baseListSatellite = action.payload.data
                 state.totalSatellite = state.baseTotalSatellite = state.listSatellite.length;
+                state.getSatellitesState = 2
             }
             // console.log('fulfilled', state.baseListSatellite);
         })
@@ -154,6 +161,7 @@ export const {
     setInterfaceMapActionState,
     setIndexPredictPoint,
     setCoordinateOfMarkers,
-    setIsInside
+    setIsInside,
+    setGetSatellitesState
 } = positionSlice.actions;
 export default positionSlice.reducer;

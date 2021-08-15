@@ -12,5 +12,6 @@ export {
     setListPredictPoint,
     setIndexPredictPoint,
     setCoordinateOfMarkers,
-    setIsInside
+    setIsInside,
+    setGetSatellitesState
 } from './PositionSlice';

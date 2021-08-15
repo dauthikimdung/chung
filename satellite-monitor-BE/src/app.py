@@ -155,6 +155,8 @@ def update_database():
     count = 0
     if pid == 0:
         try:
+            url = 'http://celestrak.com/NORAD/elements/active.txt'
+            local_filename, headers = urllib.request.urlretrieve(url=url, local_filename='..\\data.txt')
             process = subprocess.Popen('python update_db.py')
             pid = process.pid            
             print(pid)
