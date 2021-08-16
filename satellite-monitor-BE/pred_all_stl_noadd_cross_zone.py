@@ -9,17 +9,17 @@ line = f.readlines()
 #  nhap tọa độ vị trí quan sát
 obs_center = ephem.Observer()
 #  tọa độ trung tâm chỉ huy
-obs_center.lat = '21.1'
-obs_center.long = '105.48'
+obs_center.lat = '21.15557752317632'
+obs_center.long = '105.95090331286549'
 #  4 tọa độ ở 4 đỉnh của vùng bảo vệ
-obs1_lat = '20.25'
-obs1_long = '100.6'
-obs2_lat = '23.25'
-obs2_long = '104.6'
-obs3_lat = '28.6'
-obs3_long = '104.55'
-obs4_lat = '28.6'
-obs4_long = '100'
+obs1_lat = '21.24269731684942'
+obs1_long = '105.82729935379976'
+obs2_lat = '21.222203165528786'
+obs2_long = '106.08146083576183'
+obs3_lat = '21.118407881557022'
+obs3_long = '105.76822398231668'
+obs4_lat = '21.083793289035345'
+obs4_long = '106.10619006103384'
 
 #  nhập thời gian
 time1_input = input('Enter a datetime1 in YYYY-MM-DD HH:MM:SS format: ')  # interested local time
@@ -68,9 +68,9 @@ def orbit_stl(tr, tt, ts):  # hàm tính quỹ đạo vệ tinh
         id_str = line[id][2:7]  # lay ra id dang chuoi
         id_int = int(id_str)  # doi id sang dang integer
         print(id_int)
-        print('Maximum elevation:' + str(altt))
-        print("""Date/Time (UTC+7)   Elev / Azim    Lat / Long	 Alt     Dis    Radius""")
-        print("""=====================================================================""")
+        # print('Maximum elevation:' + str(altt))
+        # print("""Date/Time (UTC+7)   Elev / Azim    Lat / Long	 Alt     Dis    Radius""")
+        # print("""=====================================================================""")
 
         sorted_list = sorted([tr, tt, ts, t1, t2])
         for x in sorted_list:
@@ -90,9 +90,9 @@ def orbit_stl(tr, tt, ts):  # hàm tính quỹ đạo vệ tinh
             r = "%s | %4.1f  %5.1f | %4.1f %+6.1f | %5.1f | %5.1f  %.2f " % (
                 trvn, math.degrees(stl.alt), math.degrees(stl.az), sublat,
                 sublong, stl.elevation / 1000, stl.range / 1000, radius)
-            print(r)
+            # print(r)
         k = k + 1
-        print()
+        # print()
 
 
 # tính toán, dự đoán, in kết quả

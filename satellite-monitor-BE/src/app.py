@@ -229,7 +229,7 @@ def orbit_stl(alpha, R, const, line, obs_center, stl, obs1, obs2, obs3, obs4, tr
 
     #  kiểm tra điều kiện đi qua các đỉnh của vùng và tính toán
     if max(distance) <= radius:
-        name_sate = line[id - 2][2:7]
+        name_sate = " ".join(line[id - 2].split())
         id_str = line[id][2:7]  # lay ra id dang chuoi
         id_int = int(id_str)  # doi id sang dang integer
         print(name_sate, id_int)

@@ -98,30 +98,36 @@ const MapActions = () => {
     }
 
     const handleGetData = async () => {
-        setVisible_ModalNotice(true)
-        dispatch(setGetSatellitesState(1))
-        if (interfaceMapActionState) {
-            let a = {
-                lat: coordinateOfMarkers[0].lat,
-                long: coordinateOfMarkers[0].lng,
-                time_start: rangeTime[0] ? rangeTime[0] : '',
-                time_end: rangeTime[1] ? rangeTime[1] : ''
+        try {
+            setVisible_ModalNotice(true)
+            dispatch(setGetSatellitesState(1))
+            if (interfaceMapActionState) {
+                let a = {
+                    lat: coordinateOfMarkers[0].lat,
+                    long: coordinateOfMarkers[0].lng,
+                    time_start: rangeTime[0] ? rangeTime[0] : '',
+                    time_end: rangeTime[1] ? rangeTime[1] : ''
+                }
+                await dispatch(calculate_orbit(a));
             }
-            await dispatch(calculate_orbit(a));
-        }
-        else {
-            let a = {
-                lat: coordinateOfMarkers[4].lat,
-                long: coordinateOfMarkers[4].lng,
-                time_start: rangeTime[0] ? rangeTime[0] : '',
-                time_end: rangeTime[1] ? rangeTime[1] : '',
-                obs1: coordinateOfMarkers[0],
-                obs2: coordinateOfMarkers[1],
-                obs3: coordinateOfMarkers[2],
-                obs4: coordinateOfMarkers[3],
+            else {
+                let a = {
+                    lat: coordinateOfMarkers[4].lat,
+                    long: coordinateOfMarkers[4].lng,
+                    time_start: rangeTime[0] ? rangeTime[0] : '',
+                    time_end: rangeTime[1] ? rangeTime[1] : '',
+                    obs1: {lat: parseFloat(coordinateOfMarkers[0].lat), lng:parseFloat(coordinateOfMarkers[0].lng)},
+                    obs2: {lat: parseFloat(coordinateOfMarkers[1].lat), lng:parseFloat(coordinateOfMarkers[1].lng)},
+                    obs3: {lat: parseFloat(coordinateOfMarkers[2].lat), lng:parseFloat(coordinateOfMarkers[2].lng)},
+                    obs4: {lat: parseFloat(coordinateOfMarkers[3].lat), lng:parseFloat(coordinateOfMarkers[3].lng)},
+                }
+                await dispatch(calculate_orbit_multipoint(a));
             }
-            await dispatch(calculate_orbit_multipoint(a));
         }
+        catch{
+            dispatch(setGetSatellitesState(-1))
+        }
+        
     }
     
 

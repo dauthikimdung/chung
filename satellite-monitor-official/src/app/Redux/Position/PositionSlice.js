@@ -110,7 +110,10 @@ const positionSlice = createSlice({
                 state.baseListSatellite = action.payload.data
                 state.totalSatellite = state.baseTotalSatellite = state.listSatellite.length;
                 state.getSatellitesState = 2
+                return
             }
+            state.getSatellitesState = -1
+
             // console.log('fulfilled', state.baseListSatellite);
         })
         builder.addCase(getSatelliteInfo.fulfilled, (state, action) => {
@@ -143,7 +146,9 @@ const positionSlice = createSlice({
                 state.baseListSatellite = action.payload.data
                 state.totalSatellite = state.baseTotalSatellite = state.listSatellite.length;
                 state.getSatellitesState = 2
+                return
             }
+            state.getSatellitesState = -1
             // console.log('fulfilled', state.baseListSatellite);
         })
     }
