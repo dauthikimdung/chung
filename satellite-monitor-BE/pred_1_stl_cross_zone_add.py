@@ -11,16 +11,16 @@ line = f.readlines()
 
 # input positions of observer
 obs_center = ephem.Observer()
-obs_center.lat = '21.1'
-obs_center.long = '105.48'
-obs1_lat = '20.25'
-obs1_long = '100.6'
-obs2_lat = '23.25'
-obs2_long = '104.6'
-obs3_lat = '28.6'
-obs3_long = '104.55'
-obs4_lat = '28.6'
-obs4_long = '100'
+obs_center.lat = '4.0936392460684345'
+obs_center.long = '27.72342623815178'
+obs1_lat = '5.380658462787681'
+obs1_long = '31.935151722602303'
+obs2_lat = '0.49875311596690386'
+obs2_long = '33.20900555411155'
+obs3_lat = '1.2022432472644662'
+obs3_long = '22.798544931087733'
+obs4_lat = '11.329564658875363'
+obs4_long = '23.63313882069725'
 
 # input time and constants
 const = 0.01746031
@@ -64,6 +64,7 @@ def orbit_stl(tr, tt, ts):  # hàm tính quỹ đạo vệ tinh
     #  kiểm tra điều kiện đi qua các đỉnh của vùng và tính toán
     if max(distance) <= radius:
         print(line[i - 2], end='')  # name sate
+        print(i)
         print('Maximum elevation:' + str(altt))
         print("""Date/Time (UTC+7)   Elev / Azim    Lat / Long	 Alt     Dis    Radius""")
         print("""=====================================================================""")
@@ -76,6 +77,7 @@ def orbit_stl(tr, tt, ts):  # hàm tính quỹ đạo vệ tinh
             list_detail.append(t_detail)
 
         sorted_list = sorted(list_detail)
+        print(sorted_list)
         for x in sorted_list:
             obs_center.date = x  # thời gian tại vị trí quan sát
             stl.compute(obs_center)  # tính toán ở vị trí quan sát tại thời gian trên
@@ -107,7 +109,7 @@ def orbit_stl(tr, tt, ts):  # hàm tính quỹ đạo vệ tinh
 
 # tinh toan, du doan
 k = 0
-id = 902  # nhap id
+id = 43231  # nhap id
 for i in range(2, len(line), 3):
     id_str = line[i][2:7]
     id_int = int(id_str)
@@ -118,6 +120,7 @@ for i in range(2, len(line), 3):
         try:
             while obs_center.date < t2:  # số lần đi qua
                 tr, azr, tt, altt, ts, azs = obs_center.next_pass(stl)
+                print(tr, azr, tt, altt, ts, azs)
                 if ts == obs_center.date:
                     break
                 if tr <= t2 and ts >= t1 and altt > alpha:

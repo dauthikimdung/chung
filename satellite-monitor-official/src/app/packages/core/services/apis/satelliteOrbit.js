@@ -59,3 +59,24 @@ export const calOrbit_all_multipoint = (lat, long, time_start, time_end, obs1, o
         }
     })
 }
+export const calOrbit_one_multipoint = (lat, long, time_start, time_end, obs1, obs2, obs3, obs4, Norad_Number) => {
+
+    return api.makeRequest({
+        url: `satellites/track-one-multipoint`,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            lat: lat,
+            long: long,
+            time_start: time_start,
+            time_end: time_end,
+            obs1: obs1,
+            obs2: obs2,
+            obs3: obs3,
+            obs4: obs4,
+            Norad_Number: Norad_Number
+        }
+    })
+}

@@ -7,7 +7,7 @@ const OneSatelliteOnMap = ({ num, coordinate, name }) => {
     return (
         <>
             {
-                coordinate.slice(0, 4).map((item, index) =>
+                coordinate.map((item, index) =>
                     <>
                         <Marker key={`marker ${num}-${index}`} index_list={num} index_coordinate={index} position={[item.lat, item.long]} detail={{...item, name: name}}/>
                         <Circle key={`circle ${num}-${index}`} center={[item.lat, item.long]} radius={item.radius ? item.radius : 50000} stroke={false} />

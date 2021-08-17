@@ -68,9 +68,9 @@ def orbit_stl(tr, tt, ts):  # hàm tính quỹ đạo vệ tinh
         id_str = line[id][2:7]  # lay ra id dang chuoi
         id_int = int(id_str)  # doi id sang dang integer
         print(id_int)
-        # print('Maximum elevation:' + str(altt))
-        # print("""Date/Time (UTC+7)   Elev / Azim    Lat / Long	 Alt     Dis    Radius""")
-        # print("""=====================================================================""")
+        print('Maximum elevation:' + str(altt))
+        print("""Date/Time (UTC+7)   Elev / Azim    Lat / Long	 Alt     Dis    Radius""")
+        print("""=====================================================================""")
 
         sorted_list = sorted([tr, tt, ts, t1, t2])
         for x in sorted_list:
@@ -90,7 +90,7 @@ def orbit_stl(tr, tt, ts):  # hàm tính quỹ đạo vệ tinh
             r = "%s | %4.1f  %5.1f | %4.1f %+6.1f | %5.1f | %5.1f  %.2f " % (
                 trvn, math.degrees(stl.alt), math.degrees(stl.az), sublat,
                 sublong, stl.elevation / 1000, stl.range / 1000, radius)
-            # print(r)
+            print(r)
         k = k + 1
         # print()
 

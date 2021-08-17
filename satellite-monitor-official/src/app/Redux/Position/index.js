@@ -4,7 +4,7 @@ export {
     setCenter,
     setListPolyline,
     setCurrentSatellite,
-    setListPosition,
+    setlistPosition,
     filterSatellite,
     setUpdateState,
     setPredictPoint,
@@ -13,5 +13,6 @@ export {
     setIndexPredictPoint,
     setCoordinateOfMarkers,
     setIsInside,
-    setGetSatellitesState
+    setGetSatellitesState,
+    setRangeTime
 } from './PositionSlice';

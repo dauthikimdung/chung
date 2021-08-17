@@ -1,7 +1,7 @@
 import { createSlice } from '../../packages/core/adapters/redux-toolkit';
 import L from 'leaflet'
 import { calculate_orbit, getSatelliteInfo, updateSatelliteDatabase, stopUpdateSatelliteDatabase,
-    calculate_orbit_multipoint } from './positionAction';
+    calculate_orbit_multipoint, calculate_orbit_multipoint_one } from './positionAction';
 
 const positionSlice = createSlice({
     name: 'position',
@@ -12,7 +12,7 @@ const positionSlice = createSlice({
         listSatellite: [],
         // Vệ tinh đang xét tại 1 thời điểm 
         currentSatellite: {'detail':{},'info':{}},
-        // 5 thời điểm của vệ tinh đang xét
+        // 12 thời điểm của vệ tinh đang xét
         listPosition:[],
         // Tổng số vệ tinh đi qua tọa độ X trong khoảng thời gian (số lượng dựa trên bộ lọc)
         totalSatellite: 0,
@@ -39,6 +39,7 @@ const positionSlice = createSlice({
         isInside: 0,
         // Trạng thái quá trình lấy dữ liệu vệ tinh: 0 - không, 1 - đang, 2 thành công, -1 - lỗi
         getSatellitesState: 0,
+        rangeTime: [], 
     },
     reducers: {
         setPredictPoint: (state, action) => {
@@ -60,9 +61,9 @@ const positionSlice = createSlice({
             state.currentSatellite.detail = {...action.payload}
             // console.log(state.currentSatellite.detail);
         },
-        setListPosition: (state, action) => {
+        setlistPosition: (state, action) => {
             state.listPosition = action.payload
-            console.log('list: ', action.payload)
+            console.log('list 12: ', action.payload)
         },
         filterSatellite: (state, action) => {
             // console.log(action.payload)
@@ -95,6 +96,10 @@ const positionSlice = createSlice({
         },
         setGetSatellitesState: (state, action) => {
             state.getSatellitesState = action.payload;
+            // console.log(state.interfaceMapActionState)
+        },
+        setRangeTime: (state, action) => {
+            state.rangeTime = action.payload;
             // console.log(state.interfaceMapActionState)
         },
     },
@@ -151,6 +156,20 @@ const positionSlice = createSlice({
             state.getSatellitesState = -1
             // console.log('fulfilled', state.baseListSatellite);
         })
+        builder.addCase(calculate_orbit_multipoint_one.fulfilled, (state, action) => {
+            if (action.payload.data === undefined || 
+                    ('message' in action.payload.data && action.payload.data.message === 'error')){
+                console.log('Error Calculate');
+            }
+            else {
+                state.listPosition = action.payload.data.coordinate
+                console.log(action.payload.data.coordinate);
+                return
+            }
+            state.getSatellitesState = -1
+            // console.log('fulfilled', state.baseListSatellite);
+        })
+        
     }
 })
 
@@ -158,7 +177,7 @@ export const {
     setCenter,
     setListPolyline,
     setCurrentSatellite,
-    setListPosition,
+    setlistPosition,
     filterSatellite,
     setUpdateState,
     setPredictPoint,
@@ -167,6 +186,7 @@ export const {
     setIndexPredictPoint,
     setCoordinateOfMarkers,
     setIsInside,
-    setGetSatellitesState
+    setGetSatellitesState,
+    setRangeTime
 } = positionSlice.actions;
 export default positionSlice.reducer;

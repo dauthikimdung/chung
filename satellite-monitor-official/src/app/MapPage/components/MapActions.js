@@ -6,7 +6,7 @@ import { useDispatch, useSelector, } from 'react-redux';
 import { DatePicker, Input, Button, Form, Modal,
 ExclamationCircleOutlined, SyncOutlined, CheckCircleOutlined, message } from '../../packages/core/adapters/ant-design';
 
-import { setCenter, calculate_orbit, calculate_orbit_multipoint, setGetSatellitesState,
+import { setCenter, calculate_orbit, calculate_orbit_multipoint, setGetSatellitesState, setRangeTime,
 setCoordinateOfMarkers} from '../../Redux/Position';
 import moment from 'moment';
 import MapFilter from './MapFilter'
@@ -15,11 +15,11 @@ import InputPoint from './InputPoint'
 const MapActions = () => {
 
     const dispatch = useDispatch();
-    const { totalSatellite, baseTotalSatellite, indexPredictPoint, isInside, getSatellitesState,
+    const { totalSatellite, baseTotalSatellite, indexPredictPoint, isInside, getSatellitesState, rangeTime,
         coordinateOfMarkers, interfaceMapActionState} = useSelector(state => state.positionReducer);
     const [checkInput, setCheckInput] = useState(true)
+    const [rangeTimeNew, setRangeTimeNew] = useState([]);
     const [position, setPosition] = useState({ lat: '', lng: '' });
-    const [rangeTime, setRangeTime] = useState([]);
     const inputPoints = () => {
         let intents = []
         for (var i = 0; i < 5; i++)
@@ -83,10 +83,10 @@ const MapActions = () => {
         if (value !== null && moment() < moment(value[0])) {
             const start_time = moment(value[0]).format('YYYY-MM-DD HH:mm:ss');
             const end_time = moment(value[1]).format('YYYY-MM-DD HH:mm:ss');
-            setRangeTime([start_time, end_time])
+            setRangeTimeNew([start_time, end_time])
         }
         else {
-            setRangeTime([])
+            setRangeTimeNew([])
             message.warning({
                 content: 'Vui lòng chọn khoảng thời gian trong tương lai!',
                 style: {
@@ -100,13 +100,14 @@ const MapActions = () => {
     const handleGetData = async () => {
         try {
             setVisible_ModalNotice(true)
+            dispatch(setRangeTime(rangeTimeNew))
             dispatch(setGetSatellitesState(1))
             if (interfaceMapActionState) {
                 let a = {
                     lat: coordinateOfMarkers[0].lat,
                     long: coordinateOfMarkers[0].lng,
-                    time_start: rangeTime[0] ? rangeTime[0] : '',
-                    time_end: rangeTime[1] ? rangeTime[1] : ''
+                    time_start: rangeTimeNew[0] ? rangeTimeNew[0] : '',
+                    time_end: rangeTimeNew[1] ? rangeTimeNew[1] : ''
                 }
                 await dispatch(calculate_orbit(a));
             }
@@ -114,8 +115,8 @@ const MapActions = () => {
                 let a = {
                     lat: coordinateOfMarkers[4].lat,
                     long: coordinateOfMarkers[4].lng,
-                    time_start: rangeTime[0] ? rangeTime[0] : '',
-                    time_end: rangeTime[1] ? rangeTime[1] : '',
+                    time_start: rangeTimeNew[0] ? rangeTimeNew[0] : '',
+                    time_end: rangeTimeNew[1] ? rangeTimeNew[1] : '',
                     obs1: {lat: parseFloat(coordinateOfMarkers[0].lat), lng:parseFloat(coordinateOfMarkers[0].lng)},
                     obs2: {lat: parseFloat(coordinateOfMarkers[1].lat), lng:parseFloat(coordinateOfMarkers[1].lng)},
                     obs3: {lat: parseFloat(coordinateOfMarkers[2].lat), lng:parseFloat(coordinateOfMarkers[2].lng)},
@@ -142,9 +143,9 @@ const MapActions = () => {
         dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
     }
     useEffect(() => {
-        console.log(rangeTime)
-        setCheckInput((rangeTime.length == 0 || coordinateOfMarkers[0].lat == '' || coordinateOfMarkers[0].lng == ''))
-    }, [rangeTime,coordinateOfMarkers])
+        console.log(rangeTimeNew)
+        setCheckInput((rangeTimeNew.length == 0 || coordinateOfMarkers[0].lat == '' || coordinateOfMarkers[0].lng == ''))
+    }, [rangeTimeNew, coordinateOfMarkers])
     return (
         <>
         <div className='map-actions-wrapper'>
@@ -207,7 +208,7 @@ const MapActions = () => {
             </>
         </div>
         <Modal //// Modal Notice
-            title="Dừng quá trình Truy vấn dữ liệu"
+            title="Truy vấn dữ liệu"
             visible={modalNoticeVisible}
             maskClosable={false}
             closable={false}
