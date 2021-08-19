@@ -6,7 +6,7 @@ const MapDetail = () => {
     const { currentSatellite, listPosition } = useSelector(state => state.positionReducer)
     return (
         <div className='map-detail-wrapper'>
-            <h3>Satellite: {currentSatellite.detail.name} - <strong>{currentSatellite.detail.trvn}</strong></h3>
+            <h3>Satellite: {currentSatellite.info["Official Name"]} - <strong>{currentSatellite.detail.trvn}</strong></h3>
             <h4>{currentSatellite.detail.location}</h4>
             <table>
                 <tbody>

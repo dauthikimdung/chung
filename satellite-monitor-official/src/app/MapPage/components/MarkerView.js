@@ -40,6 +40,7 @@ const MarkerView = ({ index_list, index_coordinate, position, detail }) => {
         // })
         if(interfaceMapActionState) {
             dispatch(setlistPosition(JSON.parse(JSON.stringify(temp))))
+            console.log(temp)
         }
         else {
             let a = 

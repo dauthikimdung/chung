@@ -144,8 +144,9 @@ const positionSlice = createSlice({
             if (action.payload.data === undefined || 
                     ('message' in action.payload.data && action.payload.data.message === 'error')){
                 console.log('Error Calculate');
-                state.getSatellitesState = -1
             }
+            else if (action.payload.data === undefined)
+                console.log('Error Network');
             else {
                 state.listSatellite = action.payload.data
                 state.baseListSatellite = action.payload.data
@@ -161,6 +162,8 @@ const positionSlice = createSlice({
                     ('message' in action.payload.data && action.payload.data.message === 'error')){
                 console.log('Error Calculate');
             }
+            else if (action.payload.data.coordinate === undefined)
+                console.log('Error Network');
             else {
                 state.listPosition = action.payload.data.coordinate
                 console.log(action.payload.data.coordinate);
