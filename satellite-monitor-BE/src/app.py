@@ -263,8 +263,6 @@ def orbit_stl(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2,
         "name": name_sate,
         "coordinate": coordinates
     }
-    with open('readme.txt', 'w+') as f:
-        f.writelines(aStatellite)
     return aStatellite
 #  nhập các hằng số
 alpha = ephem.degrees('45:00:00')  # minimum elevation
