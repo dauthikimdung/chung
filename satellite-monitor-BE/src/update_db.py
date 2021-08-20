@@ -43,23 +43,25 @@ options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--no-sandbox')
 driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=options) #desired_capabilities=capabilities
-wb = openpyxl.load_workbook('..\\DB_of_STL.xlsx')
-sheet=wb.active
-max_row=sheet.max_row
+# Đọc Norad Number offline
+# wb = openpyxl.load_workbook('..\\DB_of_STL.xlsx')
+# sheet=wb.active
+# max_row=sheet.max_row
+# listID=[]
+# for i in range(2,max_row+1):
+#     value_id = sheet.cell(i, 2).value
+#     listID.append(value_id) # Creat list of id of excel file
+# f = open('data.txt'); list_content=f.readlines()
 # Tạo file csv
 csvFile = open('updated_data.csv', 'w', newline='', encoding='utf-8')
 writer = csv.writer(csvFile) # công cụ ghi file csv
 emptyRowCSV = [""] * 17  # Dòng dữ liệu trống dùng làm mẫu
-listID=[]
 # Dòng tên trường
 header= ["Official Name","NORAD Number","Nation","Operator","Users","Application",
 "Detailed Purpose","Orbit","Class of Orbit","Type of Orbit","Period (minutes)","Mass (kg)",
 "COSPAR Number","Date of Launch","Expected Lifetime (yrs)","Equipment","Describe"]
 writer.writerow(header)
-for i in range(2,max_row+1):
-    value_id = sheet.cell(i, 2).value
-    listID.append(value_id) # Creat list of id of excel file
-# f = open('data.txt'); list_content=f.readlines()
+
 local_filename, headers = urllib.request.urlretrieve(url,filename="..\\data.txt",)
 f = open(local_filename, encoding="utf-8")
 list_content=f.readlines()
@@ -69,7 +71,7 @@ for i in range(2, len(list_content),3):
     row = emptyRowCSV.copy() # Tạo bản ghi dữ liệu mới (dòng mới)
     if id_int==45123 or id_int==45125:
         continue
-    if id_int not in listID: # coll.find_one({'NORAD Number': id_int}) == None
+    if coll.find_one({'NORAD Number': id_int}) == None: # id_int not in listID
         print('New statellite:', id_int)
         row[1] = int(id_int)
         row[0] = nomalizeString(list_content[i - 2])

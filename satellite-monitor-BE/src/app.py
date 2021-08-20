@@ -1,4 +1,5 @@
 import math
+from urllib import parse
 from dns.rdatatype import NULL
 # from threading import ThreadError
 import ephem
@@ -31,12 +32,11 @@ app = Flask(__name__)
 # app.config["MONGO_URI"] = 'mongodb://localhost:27017/flaskDB'
 CORS(app)
 client = MongoClient(dbUrl, ssl=True, ssl_cert_reqs='CERT_NONE')
-
+mongo = client.get_database(dbName)
 # geopy.geocoders.options.default_timeout = 7
 
 @app.route('/satellites', methods=['GET'])
 def get_all_satellites():
-    mongo = client.get_database(dbName)
     satellites = mongo[collName]
     # print(satellites.find())
     response = json_util.dumps(satellites.find())
@@ -45,33 +45,35 @@ def get_all_satellites():
 
 @app.route('/satellites/<id>', methods=['GET'])
 def get_one_satellite(id):
-    mongo = client.get_database(dbName)
     satellites = mongo[collName]
     response = json_util.dumps(satellites.find_one({'NORAD Number': int(id)}))
     return Response(response, mimetype='application/json')
 
-# @app.route('/satellites/<name>', methods=['GET'])
-# def get_one_satellite(name):
-#     satellites = mongo.full
-#     response = json_util.dumps(satellites.find_one({'Official Name': name}))
-#     return Response(response, mimetype='application/json')
-# def reverseLocator(r):
-#     locator = Nominatim(user_agent='myGeocoder')
-#     coor = (Point( r["coordinate"]['lat'],r["coordinate"]['long']))
-#     print(coor)
-#     try:
-#         location = locator.reverse(coor)
-#         print(location.address)
-#         location_vi = GoogleTranslator(source='auto', target='vi').translate(location.address)
-#         if location_vi != None:
-#             r["coordinate"]["location"] = location_vi
-#         else:
-#             r["coordinate"]["location"] = location.address
-#     except Exception as e:
-#         print(str(e))
-#         return r
-#     print(r["coordinate"]["location"])
-#     return r
+@app.route('/satellites/find-satellite', methods=['POST'])
+def find_satellite():
+    key = request.json['key']
+    satellites = mongo[collName]
+    try:
+        id = int(key)
+        response = json_util.dumps(satellites.find({'NORAD Number': int(id)}))
+    except:
+        response = json_util.dumps(satellites.find({'Offical Name': key}))
+    return Response(response, mimetype='application/json')
+
+@app.route('/satellites/satellites-nation', methods=['GET'])
+def get_satellites_nation():
+    ids = request.json['norad_number']
+    satellites = mongo[collName]
+    temp = []
+    for id in ids:
+        x = satellites.find_one({'NORAD Number': int(id)})
+        temp.append({
+            'norad_number': id,
+            'nation': x['Nation']
+        })
+    response = json_util.dumps(temp)
+    return Response(response, mimetype='application/json')
+
 @app.route('/satellites/track-all', methods=['POST'])
 def satellite_track_all():
     try:
@@ -158,8 +160,6 @@ def update_database():
     count = 0
     if pid == 0:
         try:
-            url = 'http://celestrak.com/NORAD/elements/active.txt'
-            local_filename, headers = urllib.request.urlretrieve(url=url, local_filename='..\\data.txt')
             process = subprocess.Popen('python update_db.py')
             pid = process.pid            
             print(pid)
@@ -539,3 +539,27 @@ def satellite_track_one_multipoint():
         })
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+# @app.route('/satellites/<name>', methods=['GET'])
+# def get_one_satellite(name):
+#     satellites = mongo.full
+#     response = json_util.dumps(satellites.find_one({'Official Name': name}))
+#     return Response(response, mimetype='application/json')
+# def reverseLocator(r):
+#     locator = Nominatim(user_agent='myGeocoder')
+#     coor = (Point( r["coordinate"]['lat'],r["coordinate"]['long']))
+#     print(coor)
+#     try:
+#         location = locator.reverse(coor)
+#         print(location.address)
+#         location_vi = GoogleTranslator(source='auto', target='vi').translate(location.address)
+#         if location_vi != None:
+#             r["coordinate"]["location"] = location_vi
+#         else:
+#             r["coordinate"]["location"] = location.address
+#     except Exception as e:
+#         print(str(e))
+#         return r
+#     print(r["coordinate"]["location"])
+#     return r

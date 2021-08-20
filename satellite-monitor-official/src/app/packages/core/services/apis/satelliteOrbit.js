@@ -80,3 +80,15 @@ export const calOrbit_one_multipoint = (lat, long, time_start, time_end, obs1, o
         }
     })
 }
+export const find_satellite = (key) => {
+    return api.makeRequest({
+        url: `satellites/find-satellite`,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            key: key,
+        }
+    })
+}
