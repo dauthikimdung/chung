@@ -31,11 +31,12 @@ app = Flask(__name__)
 # app.config["MONGO_URI"] = 'mongodb://localhost:27017/flaskDB'
 CORS(app)
 client = MongoClient(dbUrl, ssl=True, ssl_cert_reqs='CERT_NONE')
-mongo = client.get_database(dbName)
+
 # geopy.geocoders.options.default_timeout = 7
 
 @app.route('/satellites', methods=['GET'])
 def get_all_satellites():
+    mongo = client.get_database(dbName)
     satellites = mongo[collName]
     # print(satellites.find())
     response = json_util.dumps(satellites.find())
@@ -44,9 +45,11 @@ def get_all_satellites():
 
 @app.route('/satellites/<id>', methods=['GET'])
 def get_one_satellite(id):
+    mongo = client.get_database(dbName)
     satellites = mongo[collName]
     response = json_util.dumps(satellites.find_one({'NORAD Number': int(id)}))
     return Response(response, mimetype='application/json')
+
 # @app.route('/satellites/<name>', methods=['GET'])
 # def get_one_satellite(name):
 #     satellites = mongo.full
@@ -415,7 +418,7 @@ def orbit_stl_one(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1,
             location = locator.reverse(coordinate)
             locate = ""
             try:
-                locate = location.address
+                locate = GoogleTranslator(source='auto', target='vi').translate(location.address)
             except Exception as e:
                 print(str(e),'b')
             # tinh ban kinh vung phu hieu qua cua ve tinh
