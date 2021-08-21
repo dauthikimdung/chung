@@ -92,3 +92,15 @@ export const find_satellite = (key) => {
         }
     })
 }
+export const load_nation_satellite = (key) => {
+    return api.makeRequest({
+        url: `satellites/find-satellite`,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            key: key,
+        }
+    })
+}

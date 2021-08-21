@@ -30,7 +30,7 @@ def mongoImport(csvPath):
     global coll # collection
     csvFile = open(csvPath)
     reader = csv.DictReader(csvFile)
-    count = 0 # Khai báo sử dụng biến global
+    count = 0 
     for each in reader:
         row={}
         for field in header:
@@ -141,4 +141,5 @@ for i in range(2, len(list_content),3):
                     continue
         writer.writerow(row)
 driver.close()
+csvFile.close()
 print(mongoImport(csvPath='updated_data.csv'))

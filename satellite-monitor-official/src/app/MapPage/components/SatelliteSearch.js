@@ -1,4 +1,4 @@
-// import './SatelliteSearch.css';
+import './SatelliteSearch.css';
 
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,67 +15,59 @@ const SatelliteSearch = () => {
     const onChange = (list) => {
 
     };
-    const searchResult = (query: string) => {
-        new Array(5)
-        .join('.')
-        .split('.')
-        .map((_, idx) => {
-        const category = `${query}${idx}`;
-        return {
-            value: category,
-            label: (
-            <div
-                style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                }}
-            >
-                <span>
-                Found {query} on{' '}
-                <a
-                    href={`https://s.taobao.com/search?q=${query}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    {category}
-                </a>
-                </span>
-                <span>{100} results</span>
-            </div>
-            ),
-        };
-        });
+    function getRandomInt(max, min = 0) {
+        return Math.floor(Math.random() * (max - min + 1)) + min; // eslint-disable-line no-mixed-operators
     }
     
+const searchResult = (query) =>
+  new Array(getRandomInt(5))
+    .join('.')
+    .split('.')
+    .map((_, idx) => {
+      const category = `${query}${idx}`;
+      return {
+        value: category,
+        label: (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <span>
+              Found {query} on{' '}
+                {category}
 
-        const [options, setOptions] = useState([]);
+            </span>
+            <span>{getRandomInt(200, 100)} results</span>
+          </div>
+        ),
+      };
+    });
+    
 
-        const handleSearch = (value: string) => {
-            setOptions(value ? searchResult(value) : []);
-        };
+    const [options, setOptions] = useState([]);
 
-        const onSelect = (value: string) => {
-            console.log('onSelect', value);
-        }
+    const handleSearch = (value: string) => {
+        console.log(options, value)
+        setOptions(value ? searchResult(value) : []);
+    };
+
+    const onSelect = (value: string) => {
+        console.log('onSelect', value);
+    }
     return (
         <>
-            <div className='map-actions-items'>
-                <Form layout='inline'>
-                    <Form.Item >
+            <div className='search-satellite-wrapper'>
                     <AutoComplete
                         dropdownMatchSelectWidth={252}
-                        style={{ width: 300 }}
+                        style={{ width: 500, height:50 }}
                         options={options}
                         onSelect={onSelect}
                         onSearch={handleSearch}
                         >
-                        <Input.Search size="large" placeholder="Số NORAD hoặc Tên" style={{ width: '50px' }} enterButton />
+                        <Input.Search size="large" placeholder="Số NORAD hoặc Tên" style={{ width: '400px', height:'50px' }} enterButton />
                     </AutoComplete>
-                    </Form.Item>                   
-                    <Form.Item>
-                        <Button />
-                    </Form.Item>
-                </Form>
             </div>
         </>
     )
