@@ -170,9 +170,10 @@ const positionSlice = createSlice({
                 return
             }
             state.getSatellitesState = -1
-            // console.log('fulfilled', state.baseListSatellite);
         })
-        
+        // builder.addCase(stopUpdateSatelliteDatabase.fulfilled, (state, action) => { // Chỉ dùng để debug
+        //     console.log('Message:', action.payload.data.message); 
+        // })
     }
 })
 

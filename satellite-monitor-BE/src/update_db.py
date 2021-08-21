@@ -30,7 +30,7 @@ def mongoImport(csvPath):
     global coll # collection
     csvFile = open(csvPath)
     reader = csv.DictReader(csvFile)
-    count = 0 # Khai báo sử dụng biến global
+    count = 0 
     for each in reader:
         row={}
         for field in header:
@@ -96,6 +96,7 @@ header= ["Official Name","NORAD Number","Nation","Operator","Users","Application
 #                 launch_date_stl = infor_stl[12][13:]
 #                 period_stl = infor_stl[9][8:]
 
+<<<<<<< HEAD
 #                 row[2] = nomalizeString(nat_stl)
 #                 row[7] = nomalizeString(orbit_stl)
 #                 row[0] = nomalizeString(name_stl)
@@ -141,4 +142,52 @@ header= ["Official Name","NORAD Number","Nation","Operator","Users","Application
 #                     continue
 #         writer.writerow(row)
 # driver.close()
+=======
+                row[2] = nomalizeString(nat_stl)
+                row[7] = nomalizeString(orbit_stl)
+                row[0] = nomalizeString(name_stl)
+                row[12] = nomalizeString(cospar_number_stl)
+                row[10] = nomalizeString(period_stl)
+                row[13] = nomalizeString(launch_date_stl)
+        else:  # in case of normal name_satellite
+            try:
+                print("google")
+                driver.get('https://www.google.com.vn/')
+                element = driver.find_element_by_name('q')
+                print('site:space.skyrocket.de ' + f'{list_content[i-2]}')
+                element.send_keys('site:space.skyrocket.de ' + f'{list_content[i-2]}')  # search in space.skyrocket.de
+                element.submit()
+            except exceptions.StaleElementReferenceException:
+                try:
+                    result = driver.find_element_by_tag_name('h3')  # click on first result
+                    result.click()
+                    infor = findByXpath(driver,"/html/body/div[@class='page_bg']/div[@class='container']/div/div[@id='satdescription']/p[1]")
+                    nat_stl = findByXpath(driver,
+                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[1]/td[@id='sdnat']")
+                    typ_stl = findByXpath(driver,
+                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[2]/td[@id='sdtyp']")
+                    ope_stl = findByXpath(driver,
+                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[3]/td[@id='sdope']")
+                    equ_stl = findByXpath(driver,
+                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[5]/td[@id='sdequ']")
+                    lif_stl = findByXpath(driver,
+                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[9]/td[@id='sdlif']")
+                    mass_stl = findByXpath(driver,
+                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[10]/td[@id='sdmas']")
+                    orbit_stl = findByXpath(driver,
+                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[11]/td[@id='sdorb']")
+                    row[2] = nomalizeString(nat_stl)
+                    row[3] = nomalizeString(ope_stl)
+                    row[5] = nomalizeString(typ_stl)
+                    row[7] = nomalizeString(orbit_stl)
+                    row[11] = nomalizeString(mass_stl)
+                    row[14] = nomalizeString(lif_stl)
+                    row[15] = nomalizeString(equ_stl)
+                    row[16] = nomalizeString(infor)
+                except (TimeoutException, NoSuchElementException):
+                    continue
+        writer.writerow(row)
+driver.close()
+csvFile.close()
+>>>>>>> cfd4f291ef0230ade7045094a30775a5d02228ba
 print(mongoImport(csvPath='updated_data.csv'))
