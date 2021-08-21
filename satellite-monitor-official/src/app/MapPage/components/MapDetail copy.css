@@ -1,0 +1,21 @@
+.map-detail-wrapper {
+  flex: 1;
+  height: 100%;
+  text-align: center;
+  width: 49%;
+  margin-left: 1%;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 2px solid #ddd;
+  background-color: rgba(254, 255, 255, 0.685);
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}

@@ -22,6 +22,7 @@ export {
     message,
     Dropdown,
     Divider,
+    AutoComplete 
 } from 'antd';
 
 export { DownOutlined, 

@@ -158,8 +158,9 @@ def satellite_track_all():
 def update_database():
     global pid
     count = 0
+    # If no update process
     if pid == 0:
-        try:
+        try: # Try start new process
             process = subprocess.Popen('python update_db.py')
             pid = process.pid            
             print(pid)
@@ -179,8 +180,41 @@ def update_database():
             return Response(response, mimetype='application/json')
         response = json_util.dumps({'status': True, 'count': count, 'message':'Cập nhật thành công!'})
         return Response(response, mimetype='application/json')
-    response = json_util.dumps({'status': True, 'count': count, 'message':'Đã là bản cập nhật mới nhất!'})
-    return Response(response, mimetype='application/json')
+    else: # Nếu có tiến trình khác 
+        try: # Thử tắt nó
+            current_process = psutil.Process(pid)
+            children = current_process.children(recursive=True)            
+            os.kill(pid, 9)
+            for child in children:
+                print('Child pid is {}'.format(child.pid))
+                os.kill(child.pid, 9)
+            pid = 0
+            print('Đang có tiến trình cập nhật khác! Đã dừng ')
+            try: # Khi tắt thành công - Thử tạo tiế trình mới
+                process = subprocess.Popen('python update_db.py')
+                pid = process.pid            
+                print(pid)
+                stdout, stderr = process.communicate()
+                if (stdout == None): # Nếu stdout == None chứng tỏ tiến trình crawl bị dừng bỏi yêu cầu từ client
+                    raise Exception 
+                pid = 0
+            except Exception as ex:
+                if (stderr != None): # Nếu stderr != None chứng tỏ tiến trình crawl bị lỗi
+                    print(stderr)
+                    errMess = base64.b64encode(stderr)
+                else:
+                    errMess = str(ex)
+                print(errMess)
+                response = json_util.dumps({'status': False, 'count': count, 'message':errMess})
+                return Response(response, mimetype='application/json')
+            response = json_util.dumps({'status': True, 'count': count, 'message':'Cập nhật thành công!'})
+            return Response(response, mimetype='application/json')
+        except Exception as ex:
+            print(str(ex))
+            response = json_util.dumps({'status': False, 'message':'Lỗi dừng cập nhật: ' + str(ex)})
+            return Response(response, mimetype='application/json')
+    # response = json_util.dumps({'status': True, 'count': count, 'message':'Đã là bản cập nhật mới nhất!'})
+    # return Response(response, mimetype='application/json')
 
 @app.route('/satellites/stop-update-database', methods=['POST'])
 def stop_update_database():
