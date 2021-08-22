@@ -207,23 +207,22 @@ def satellite_track_all():
 def update_database():
     global pid
     count = 0
+    print("Update process pid:",pid)
     # If no update process
     if pid == 0:
         try: # Try start new process
-            process = subprocess.Popen('python update_db.py')
-            pid = process.pid            
+            process = subprocess.Popen('python update_db.py', stdout=subprocess.PIPE)
+            pid = process.pid
             print(pid)
-            stdout, stderr = process.communicate()
-            if (stdout == None): # Nếu stdout == None chứng tỏ tiến trình crawl bị dừng bỏi yêu cầu từ client
-                raise Exception 
+            stdout, _ = process.communicate()
             pid = 0
-            # count = int(stdout)
+            print(stdout)
+            if (stdout == None): # Nếu stdout == None chứng tỏ tiến trình crawl bị dừng bỏi yêu cầu từ client
+                raise Exception
+            count = int(stdout.decode())
+            print(count)
         except Exception as ex:
-            if (stderr != None): # Nếu stderr != None chứng tỏ tiến trình crawl bị lỗi
-                print(stderr)
-                errMess = base64.b64encode(stderr)
-            else:
-                errMess = str(ex)
+            errMess = str(ex)
             print(errMess)
             response = json_util.dumps({'status': False, 'count': count, 'message':errMess})
             return Response(response, mimetype='application/json')

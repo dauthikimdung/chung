@@ -39,10 +39,10 @@ def mongoImport(csvPath):
         coll.insert(row)
         count+=1
     return count
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')
-options.add_argument('--no-sandbox')
-driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=options) #desired_capabilities=capabilities
+# options = webdriver.ChromeOptions()
+# options.add_argument('--headless')
+# options.add_argument('--no-sandbox')
+# driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=options) #desired_capabilities=capabilities
 # Đọc Norad Number offline
 # wb = openpyxl.load_workbook('..\\DB_of_STL.xlsx')
 # sheet=wb.active
@@ -62,84 +62,84 @@ header= ["Official Name","NORAD Number","Nation","Operator","Users","Application
 "COSPAR Number","Date of Launch","Expected Lifetime (yrs)","Equipment","Describe"]
 writer.writerow(header)
 
-local_filename, headers = urllib.request.urlretrieve(url,filename="..\\data.txt",)
-f = open(local_filename, encoding="utf-8")
-list_content=f.readlines()
-for i in range(2, len(list_content),3):
-    id_str=list_content[i][2:7]
-    id_int=int(id_str)
-    row = emptyRowCSV.copy() # Tạo bản ghi dữ liệu mới (dòng mới)
-    if id_int==45123 or id_int==45125:
-        continue
-    if coll.find_one({'NORAD Number': id_int}) == None: # id_int not in listID
-        print('New statellite:', id_int)
-        row[1] = int(id_int)
-        row[0] = nomalizeString(list_content[i - 2])
-        if list_content[i-2][0:2] == '20':  # in case of name_satellite starting by 2021
-            try:
-                print("n2yo")
-                driver.get('https://www.n2yo.com/')
-                element_search = driver.find_element_by_name('q')
-                element_search.send_keys(list_content[i-2])
-                element_search.submit()
-            except exceptions.StaleElementReferenceException:
-                try:
-                    infor_stl = findByXpath(driver,
-                        "/html/body/table[@id='tabsatellite']/tbody/tr/td[2]/div[@id='satinfo']").splitlines()
-                except (TimeoutException, NoSuchElementException):
-                    print('TimeoutException')
-                    continue
-                name_stl = infor_stl[0][::]
-                nat_stl = infor_stl[13][8:]
-                orbit_stl = infor_stl[6][9:] + 'x' + infor_stl[7][8:] + 'x' + infor_stl[8][13:]
-                cospar_number_stl = infor_stl[5][12:]
-                launch_date_stl = infor_stl[12][13:]
-                period_stl = infor_stl[9][8:]
+# local_filename, headers = urllib.request.urlretrieve(url,filename="..\\data.txt",)
+# f = open(local_filename, encoding="utf-8")
+# list_content=f.readlines()
+# for i in range(2, len(list_content),3):
+#     id_str=list_content[i][2:7]
+#     id_int=int(id_str)
+#     row = emptyRowCSV.copy() # Tạo bản ghi dữ liệu mới (dòng mới)
+#     if id_int==45123 or id_int==45125:
+#         continue
+#     if coll.find_one({'NORAD Number': id_int}) == None: # id_int not in listID
+#         print('New statellite:', id_int)
+#         row[1] = int(id_int)
+#         row[0] = nomalizeString(list_content[i - 2])
+#         if list_content[i-2][0:2] == '20':  # in case of name_satellite starting by 2021
+#             try:
+#                 print("n2yo")
+#                 driver.get('https://www.n2yo.com/')
+#                 element_search = driver.find_element_by_name('q')
+#                 element_search.send_keys(list_content[i-2])
+#                 element_search.submit()
+#             except exceptions.StaleElementReferenceException:
+#                 try:
+#                     infor_stl = findByXpath(driver,
+#                         "/html/body/table[@id='tabsatellite']/tbody/tr/td[2]/div[@id='satinfo']").splitlines()
+#                 except (TimeoutException, NoSuchElementException):
+#                     print('TimeoutException')
+#                     continue
+#                 name_stl = infor_stl[0][::]
+#                 nat_stl = infor_stl[13][8:]
+#                 orbit_stl = infor_stl[6][9:] + 'x' + infor_stl[7][8:] + 'x' + infor_stl[8][13:]
+#                 cospar_number_stl = infor_stl[5][12:]
+#                 launch_date_stl = infor_stl[12][13:]
+#                 period_stl = infor_stl[9][8:]
 
-                row[2] = nomalizeString(nat_stl)
-                row[7] = nomalizeString(orbit_stl)
-                row[0] = nomalizeString(name_stl)
-                row[12] = nomalizeString(cospar_number_stl)
-                row[10] = nomalizeString(period_stl)
-                row[13] = nomalizeString(launch_date_stl)
-        else:  # in case of normal name_satellite
-            try:
-                print("google")
-                driver.get('https://www.google.com.vn/')
-                element = driver.find_element_by_name('q')
-                print('site:space.skyrocket.de ' + f'{list_content[i-2]}')
-                element.send_keys('site:space.skyrocket.de ' + f'{list_content[i-2]}')  # search in space.skyrocket.de
-                element.submit()
-            except exceptions.StaleElementReferenceException:
-                try:
-                    result = driver.find_element_by_tag_name('h3')  # click on first result
-                    result.click()
-                    infor = findByXpath(driver,"/html/body/div[@class='page_bg']/div[@class='container']/div/div[@id='satdescription']/p[1]")
-                    nat_stl = findByXpath(driver,
-                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[1]/td[@id='sdnat']")
-                    typ_stl = findByXpath(driver,
-                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[2]/td[@id='sdtyp']")
-                    ope_stl = findByXpath(driver,
-                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[3]/td[@id='sdope']")
-                    equ_stl = findByXpath(driver,
-                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[5]/td[@id='sdequ']")
-                    lif_stl = findByXpath(driver,
-                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[9]/td[@id='sdlif']")
-                    mass_stl = findByXpath(driver,
-                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[10]/td[@id='sdmas']")
-                    orbit_stl = findByXpath(driver,
-                        "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[11]/td[@id='sdorb']")
-                    row[2] = nomalizeString(nat_stl)
-                    row[3] = nomalizeString(ope_stl)
-                    row[5] = nomalizeString(typ_stl)
-                    row[7] = nomalizeString(orbit_stl)
-                    row[11] = nomalizeString(mass_stl)
-                    row[14] = nomalizeString(lif_stl)
-                    row[15] = nomalizeString(equ_stl)
-                    row[16] = nomalizeString(infor)
-                except (TimeoutException, NoSuchElementException):
-                    continue
-        writer.writerow(row)
-driver.close()
+#                 row[2] = nomalizeString(nat_stl)
+#                 row[7] = nomalizeString(orbit_stl)
+#                 row[0] = nomalizeString(name_stl)
+#                 row[12] = nomalizeString(cospar_number_stl)
+#                 row[10] = nomalizeString(period_stl)
+#                 row[13] = nomalizeString(launch_date_stl)
+#         else:  # in case of normal name_satellite
+#             try:
+#                 print("google")
+#                 driver.get('https://www.google.com.vn/')
+#                 element = driver.find_element_by_name('q')
+#                 print('site:space.skyrocket.de ' + f'{list_content[i-2]}')
+#                 element.send_keys('site:space.skyrocket.de ' + f'{list_content[i-2]}')  # search in space.skyrocket.de
+#                 element.submit()
+#             except exceptions.StaleElementReferenceException:
+#                 try:
+#                     result = driver.find_element_by_tag_name('h3')  # click on first result
+#                     result.click()
+#                     infor = findByXpath(driver,"/html/body/div[@class='page_bg']/div[@class='container']/div/div[@id='satdescription']/p[1]")
+#                     nat_stl = findByXpath(driver,
+#                         "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[1]/td[@id='sdnat']")
+#                     typ_stl = findByXpath(driver,
+#                         "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[2]/td[@id='sdtyp']")
+#                     ope_stl = findByXpath(driver,
+#                         "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[3]/td[@id='sdope']")
+#                     equ_stl = findByXpath(driver,
+#                         "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[5]/td[@id='sdequ']")
+#                     lif_stl = findByXpath(driver,
+#                         "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[9]/td[@id='sdlif']")
+#                     mass_stl = findByXpath(driver,
+#                         "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[10]/td[@id='sdmas']")
+#                     orbit_stl = findByXpath(driver,
+#                         "/html/body/div[@class='page_bg']/div[@class='container']/div/table[@id='satdata']/tbody/tr[11]/td[@id='sdorb']")
+#                     row[2] = nomalizeString(nat_stl)
+#                     row[3] = nomalizeString(ope_stl)
+#                     row[5] = nomalizeString(typ_stl)
+#                     row[7] = nomalizeString(orbit_stl)
+#                     row[11] = nomalizeString(mass_stl)
+#                     row[14] = nomalizeString(lif_stl)
+#                     row[15] = nomalizeString(equ_stl)
+#                     row[16] = nomalizeString(infor)
+#                 except (TimeoutException, NoSuchElementException):
+#                     continue
+#         writer.writerow(row)
+# driver.close()
 csvFile.close()
-print(mongoImport(csvPath='updated_data.csv'))
+print(mongoImport(csvPath='updated_data.csv'),end='')
