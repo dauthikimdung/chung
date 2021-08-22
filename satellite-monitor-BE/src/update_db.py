@@ -1,14 +1,14 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.common.keys import Keys
 from selenium.common import exceptions
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
-import openpyxl
+# import openpyxl
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import csv
-import urllib.request
+# import urllib.request
 from pymongo import MongoClient
 url = 'http://celestrak.com/NORAD/elements/active.txt' # Satellite Database online
 dbUrl = "mongodb+srv://satelliteV10:7FgUH3CrGH21@satellite0.fvo32.mongodb.net/satellite?retryWrites=true&w=majority"
@@ -17,7 +17,7 @@ collName = "full"
 client = MongoClient(dbUrl, ssl=True, ssl_cert_reqs='CERT_NONE')
 db = client[dbName]
 coll = db[collName]
-timeout = 40
+timeout = 10
 def findByXpath(driver, xpath):
     return WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, xpath))).text
 # Chuẩn hóa chuỗi ký tự (bỏ các ký tự thừa: \n, \t, "  ")
@@ -35,13 +35,16 @@ def mongoImport(csvPath):
         row={}
         for field in header:
             row[field]= " ".join(each[field].split())
-        print(row)
-        coll.insert(row)
+        # print(row)
+        coll.insert_one(row)
         count+=1
     return count
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--no-sandbox')
+options.add_argument('--disable-gpu')
+options.add_argument('--disable-software-rasterizer')
+
 driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=options) #desired_capabilities=capabilities
 # Đọc Norad Number offline
 # wb = openpyxl.load_workbook('..\\DB_of_STL.xlsx')
@@ -61,8 +64,8 @@ header= ["Official Name","NORAD Number","Nation","Operator","Users","Application
 "Detailed Purpose","Orbit","Class of Orbit","Type of Orbit","Period (minutes)","Mass (kg)",
 "COSPAR Number","Date of Launch","Expected Lifetime (yrs)","Equipment","Describe"]
 writer.writerow(header)
-
-local_filename, headers = urllib.request.urlretrieve(url,filename="..\\data.txt",)
+# local_filename, headers = urllib.request.urlretrieve(url,filename="..\\data.txt",)
+local_filename = "..\\data.txt"
 f = open(local_filename, encoding="utf-8")
 list_content=f.readlines()
 for i in range(2, len(list_content),3):
@@ -107,7 +110,7 @@ for i in range(2, len(list_content),3):
                 print("google")
                 driver.get('https://www.google.com.vn/')
                 element = driver.find_element_by_name('q')
-                print('site:space.skyrocket.de ' + f'{list_content[i-2]}')
+                # print('site:space.skyrocket.de ' + f'{list_content[i-2]}')
                 element.send_keys('site:space.skyrocket.de ' + f'{list_content[i-2]}')  # search in space.skyrocket.de
                 element.submit()
             except exceptions.StaleElementReferenceException:
@@ -137,9 +140,12 @@ for i in range(2, len(list_content),3):
                     row[14] = nomalizeString(lif_stl)
                     row[15] = nomalizeString(equ_stl)
                     row[16] = nomalizeString(infor)
-                except (TimeoutException, NoSuchElementException):
+                except (TimeoutException, NoSuchElementException) as exx:
+                    # print(str(exx))
                     continue
         writer.writerow(row)
+        # break
 driver.close()
 csvFile.close()
+print("Updated to csv")
 print(mongoImport(csvPath='updated_data.csv'),end='')
