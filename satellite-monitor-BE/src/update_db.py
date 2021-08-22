@@ -141,4 +141,5 @@ for i in range(2, len(list_content),3):
                     continue
         writer.writerow(row)
 driver.close()
+csvFile.close()
 print(mongoImport(csvPath='updated_data.csv'))
