@@ -11,25 +11,11 @@ setCoordinateOfMarkers} from '../../Redux/Position';
 import moment from 'moment';
 import MapFilter from './MapFilter'
 import InputPoint from './InputPoint'
-function groupBy(collection, property) {
-    var i = 0, val, index,
-        values = [], result = [];
-    for (; i < collection.length; i++) {
-        val = collection[i][property];
-        index = values.indexOf(val);
-        if (index > -1)
-            result[index].push(collection[i]);
-        else {
-            values.push(val);
-            result.push([collection[i]]);
-        }
-    }
-    return result;
-}
+import MapStatistical from './MapStatistical'
 const MapActions = () => {
 
     const dispatch = useDispatch();
-    const { totalSatellite, baseTotalSatellite, indexPredictPoint, isInside, getSatellitesState, rangeTime,
+    const { totalSatellite, baseTotalSatellite, indexPredictPoint, isInside, getSatellitesState,
         coordinateOfMarkers, interfaceMapActionState} = useSelector(state => state.positionReducer);
     const [checkInput, setCheckInput] = useState(true)
     const [rangeTimeNew, setRangeTimeNew] = useState([]);
@@ -223,6 +209,7 @@ const MapActions = () => {
                 <p>Đang chọn điểm <strong>{indexPredictPoint !== 4 ? indexPredictPoint+1 : 'Trung tâm'}</strong></p>
             }            
             </>
+            {/* <MapStatistical/> */}
         </div>
         <Modal //// Modal Notice
             title="Truy vấn dữ liệu"

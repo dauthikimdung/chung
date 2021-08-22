@@ -12,6 +12,7 @@ import OneSatelliteOnMap from './OneSatelliteOnMap';
 import MapSelectArea from './MapSelectArea';
 import pointInPolygon from 'point-in-polygon'
 import { message } from '../../packages/core/adapters/ant-design';
+import MapStatistical from './MapStatistical'
 const MapContent = (props) => {
     
     const mapRef = useRef();
@@ -223,7 +224,8 @@ const MapContent = (props) => {
                     listSatellite.map((item, index) => <OneSatelliteOnMap key={`satellite marker ${index}`} coordinate={item.coordinate} name={item.name} num={index}/>)
                 }                
                 <MapSelectArea polygonDisplay={polygonDisplay}/>
-            </Map>
+            </Map>            
+            <MapStatistical />
         </div>
 
     );

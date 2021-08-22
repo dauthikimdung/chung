@@ -164,13 +164,13 @@ def satellite_track_all():
                         k = k+1
                         coordinates = []
                         sorted_list = sorted([t1, t2, tr, tt, ts])
+                        satellite = satellites.find_one({'NORAD Number': id_int})
                         for x in (sorted_list):
                             obs.date = x
                             stl.compute(obs)
                             trvn = ephem.Date(x + 7 * ephem.hour)
                                                 
-                            str_trvn = "%s" % (trvn)                            
-                            satellite = satellites.find_one({'NORAD Number': id_int})
+                            str_trvn = "%s" % (trvn)
                             coordinates.append({
                                 "id": id_int,
                                 "trvn": str_trvn,
@@ -181,11 +181,11 @@ def satellite_track_all():
                                 "elevation": stl.elevation / 1000,
                                 "range": stl.range / 1000,
                                 "location": '',
-                                "nation": satellite['Nation']
                             })
                         result.append({
                             "name": name_sate,
-                            "coordinate": coordinates
+                            "coordinate": coordinates,
+                            "nation": satellite['Nation']
                         })
                     else:
                         obs.date = ts
@@ -287,7 +287,8 @@ def stop_update_database():
     return Response(response, mimetype='application/json')
 
 def orbit_stl(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2, id):  # hàm tính quỹ đạo vệ tinh
-    # tính bán kính vùng phủ tại thời điểm tt
+    # tính bán kính vùng phủ tại thời điểm tt    
+    satellites = mongo[collName]
     obs_center.date = tt
     stl.compute(obs_center)
     b = R + stl.elevation / 1000  # do cao ve tinh tu tam Trai Dat
@@ -320,6 +321,7 @@ def orbit_stl(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2,
         print(name_sate, id_int)
         coordinates = []
         sorted_list = sorted([tr, tt, ts, t1, t2])
+        satellite = satellites.find_one({'NORAD Number': id_int})
         for x in sorted_list:
             obs_center.date = x  # thời gian tại vị trí quan sát
             stl.compute(obs_center)  # tính toán ở vị trí quan sát tại thời gian trên
@@ -346,7 +348,8 @@ def orbit_stl(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2,
             })
     aStatellite = {
         "name": name_sate,
-        "coordinate": coordinates
+        "coordinate": coordinates,
+        "nation": satellite['Nation']
     }
     return aStatellite
 #  nhập các hằng số
@@ -451,6 +454,8 @@ def satellite_track_all_multipoint():
 
 def orbit_stl_one(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2, i, id):  # hàm tính quỹ đạo vệ tinh
     # tính bán kính vùng phủ tại thời điểm tt
+    
+    satellites = mongo[collName]
     obs_center.date = tt
     stl.compute(obs_center)
     b = R + stl.elevation / 1000  # do cao ve tinh tu tam Trai Dat
@@ -474,7 +479,8 @@ def orbit_stl_one(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1,
         a2 = 2 * math.asin(math.sqrt(a1))
         distance_km = 6371 * a2
         distance.append(distance_km)
-
+    
+    satellite = satellites.find_one({'NORAD Number': id})
     #  kiểm tra điều kiện đi qua các đỉnh của vùng và tính toán
     if max(distance) <= radius:
         name_sate = " ".join(line[i - 2].split())
@@ -522,7 +528,8 @@ def orbit_stl_one(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1,
                 "location": locate
             })
     aStatellite = {
-        "coordinate": coordinates
+        "coordinate": coordinates,
+        "nation": satellite['Nation']
     }
     return aStatellite
 @app.route('/satellites/track-one-multipoint', methods=['POST'])

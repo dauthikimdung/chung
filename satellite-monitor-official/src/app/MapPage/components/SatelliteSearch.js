@@ -3,18 +3,12 @@ import './SatelliteSearch.css';
 import React, { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Input, Button, Form, AutoComplete  } from '../../packages/core/adapters/ant-design';
-import { SelectProps } from 'antd/es/select';
+import { Input, AutoComplete  } from '../../packages/core/adapters/ant-design';
 import { search_list_names, find_satellite_info } from '../../Redux/Position';
 
 const SatelliteSearch = () => {
     const dispatch = useDispatch();
     const { listNameSatellites, satelliteSearchInfo } = useSelector(state => state.positionReducer);
-    const [indeterminate, setIndeterminate] = useState(true);
-    const [checkAll, setCheckAll] = useState(false);
-    const onChange = (list) => {
-
-    };
 
     useEffect(() => {        
         setOptions(searchResult());
