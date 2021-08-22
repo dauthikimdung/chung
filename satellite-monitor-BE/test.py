@@ -8,6 +8,7 @@ collName = "full"
 client = MongoClient(dbUrl, ssl=True, ssl_cert_reqs='CERT_NONE')
 db = client[dbName]
 coll = db[collName]
+query = { "NORAD Number": NULL}
 # query = { "Official Name": { "$regex": 'Starlink-24', "$options" :'i' } }
 # query = {
 #     "$expr": {
@@ -16,7 +17,7 @@ coll = db[collName]
 #                 "$size": { 
 #                     "$regexFindAll": { 
 #                         "input": {"$toString": "$NORAD Number"}, 
-#                         "regex": ".*123.*"
+#                         "regex": "nan"
 #                     }
 #                 }
 #             }, 
@@ -24,14 +25,16 @@ coll = db[collName]
 #         ]
 #     }
 # }
-# listSatellites = coll.find(query)
-# listName = [i['NORAD Number'] for i in listSatellites ]
-# print(listName)
-from bson.son import SON
-pipeline = [
-     {"$unwind": "$Nation"},
-     {"$group": {"_id": "$Nation", "count": {"$sum": 1}}},
-     {"$sort": SON([("count", -1), ("_id", -1)])}
- ]
-x = list(coll.aggregate(pipeline))
-print(x)
+listSatellites = coll.find(query)
+listName = [i['Official Name'] for i in listSatellites ]
+print(listName)
+
+# Group by
+# from bson.son import SON
+# pipeline = [
+#      {"$unwind": "$Nation"},
+#      {"$group": {"_id": "$Nation", "count": {"$sum": 1}}},
+#      {"$sort": SON([("count", -1), ("_id", -1)])}
+#  ]
+# x = list(coll.aggregate(pipeline))
+# print(x)

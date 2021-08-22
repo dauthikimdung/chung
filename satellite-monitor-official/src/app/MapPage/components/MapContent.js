@@ -225,7 +225,7 @@ const MapContent = (props) => {
                 }                
                 <MapSelectArea polygonDisplay={polygonDisplay}/>
             </Map>            
-            <MapStatistical />
+            {/* <MapStatistical /> */}
         </div>
 
     );
