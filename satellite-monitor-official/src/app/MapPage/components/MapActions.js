@@ -11,7 +11,21 @@ setCoordinateOfMarkers} from '../../Redux/Position';
 import moment from 'moment';
 import MapFilter from './MapFilter'
 import InputPoint from './InputPoint'
-
+function groupBy(collection, property) {
+    var i = 0, val, index,
+        values = [], result = [];
+    for (; i < collection.length; i++) {
+        val = collection[i][property];
+        index = values.indexOf(val);
+        if (index > -1)
+            result[index].push(collection[i]);
+        else {
+            values.push(val);
+            result.push([collection[i]]);
+        }
+    }
+    return result;
+}
 const MapActions = () => {
 
     const dispatch = useDispatch();
@@ -29,7 +43,9 @@ const MapActions = () => {
     // Modal notice
     const [modalNoticeVisible, setVisible_ModalNotice] = useState(false);    
     // const [modalNoticeMaskClosable, setModalNoticeMaskClosable] = useState(false)
+    
 
+    // var obj = groupBy(list, "group");
     // Modal Notice - Nội dung
     const modalNoticeText = () => {
         switch(getSatellitesState) {
@@ -110,6 +126,7 @@ const MapActions = () => {
                     time_end: rangeTimeNew[1] ? rangeTimeNew[1] : ''
                 }
                 await dispatch(calculate_orbit(a));
+                // let temp = [[y[0] for y in mylist if y[1]==x] for x in values]
             }
             else {
                 let a = {
@@ -125,7 +142,7 @@ const MapActions = () => {
                 await dispatch(calculate_orbit_multipoint(a));
             }
         }
-        catch{
+        catch {
             dispatch(setGetSatellitesState(-1))
         }
         

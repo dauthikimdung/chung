@@ -49,20 +49,66 @@ def get_one_satellite(id):
     response = json_util.dumps(satellites.find_one({'NORAD Number': int(id)}))
     return Response(response, mimetype='application/json')
 
-@app.route('/satellites/find-satellite', methods=['POST'])
-def find_satellite():
-    key = request.json['key']
+@app.route('/satellites/search-list-names', methods=['POST'])
+def search_list_names():
+    temp = request.json['key']
     satellites = mongo[collName]
     try:
-        id = int(key)
-        response = json_util.dumps(satellites.find({'NORAD Number': int(id)}))
+        id = int(temp)
+        query = {
+            "$expr": {
+                "$gt": [
+                    { 
+                        "$size": { 
+                            "$regexFindAll": { 
+                                "input": {"$toString": "$NORAD Number"}, 
+                                "regex": ".*"+temp+".*"
+                            }
+                        }
+                    }, 
+                    0
+                ]
+            }
+        }
     except:
-        response = json_util.dumps(satellites.find({'Offical Name': key}))
+        key = temp.replace("(","\(").replace(")","\)").replace("[","\[").replace("]","\]")
+        query = { "Official Name": { "$regex": key+'.*', "$options" :'i' } }
+    listSatellites = satellites.find(query)
+    listName = [{
+    'name': " ".join(i['Official Name'].split()),
+    'id': i['NORAD Number']
+    } for i in listSatellites[:8] ]
+    # listName8 = listName[:8]
+    tempResp = {
+        'listName': listName,
+        # 'totalLength' : listSatellites.count,
+        # 'totalName': listName
+    }
+    response = json_util.dumps(tempResp)
     return Response(response, mimetype='application/json')
 
-@app.route('/satellites/satellites-nation', methods=['GET'])
+@app.route('/satellites/find-satellite', methods=['POST'])
+def find_satellite():
+    temp = request.json['key']
+    satellites = mongo[collName]
+    tempResp = None
+    try:
+        id = int(temp)
+        tempResp = satellites.find_one({'NORAD Number': int(id)})
+    except:
+        key = temp.replace("(","\(").replace(")","\)").replace("[","\[").replace("]","\]")
+        query = { "Official Name": { "$regex": key, "$options" :'i' } }
+        tempResp = satellites.find_one(query)
+    if tempResp != None:
+        response = json_util.dumps(tempResp)
+    else:
+        response = {'message': 'Error'}
+    
+    return Response(response, mimetype='application/json')
+
+@app.route('/satellites/list-satellites-nation', methods=['GET'])
 def get_satellites_nation():
-    ids = request.json['norad_number']
+    ids = request.json['listID']
     satellites = mongo[collName]
     temp = []
     for id in ids:
@@ -78,6 +124,7 @@ def get_satellites_nation():
 def satellite_track_all():
     try:
         url = 'http://celestrak.com/NORAD/elements/active.txt'
+        satellites = mongo[collName]
         # file = urllib.request.urlopen(url).read().splitlines()
         local_filename ="..\\data.txt"
         f = open(local_filename, encoding="utf-8")
@@ -122,7 +169,8 @@ def satellite_track_all():
                             stl.compute(obs)
                             trvn = ephem.Date(x + 7 * ephem.hour)
                                                 
-                            str_trvn = "%s" % (trvn)
+                            str_trvn = "%s" % (trvn)                            
+                            satellite = satellites.find_one({'NORAD Number': id_int})
                             coordinates.append({
                                 "id": id_int,
                                 "trvn": str_trvn,
@@ -132,7 +180,8 @@ def satellite_track_all():
                                 "long": math.degrees(stl.sublong),
                                 "elevation": stl.elevation / 1000,
                                 "range": stl.range / 1000,
-                                "location": ''
+                                "location": '',
+                                "nation": satellite['Nation']
                             })
                         result.append({
                             "name": name_sate,

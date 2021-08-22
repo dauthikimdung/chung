@@ -1,7 +1,8 @@
 import { createSlice } from '../../packages/core/adapters/redux-toolkit';
 import L from 'leaflet'
 import { calculate_orbit, getSatelliteInfo, updateSatelliteDatabase, stopUpdateSatelliteDatabase,
-    calculate_orbit_multipoint, calculate_orbit_multipoint_one } from './positionAction';
+    calculate_orbit_multipoint, calculate_orbit_multipoint_one, search_list_names,
+    find_satellite_info, load_all_nation_satellite} from './positionAction';
 
 const positionSlice = createSlice({
     name: 'position',
@@ -40,6 +41,15 @@ const positionSlice = createSlice({
         // Trạng thái quá trình lấy dữ liệu vệ tinh: 0 - không, 1 - đang, 2 thành công, -1 - lỗi
         getSatellitesState: 0,
         rangeTime: [], 
+        // Danh sách tên cho tìm kiếm
+        listNameSatellites: {
+            'listName': [],
+            'totalLength' : 0,
+            'totalName': []
+        },
+        //
+        satelliteSearchInfo: {},
+
     },
     reducers: {
         setPredictPoint: (state, action) => {
@@ -171,9 +181,21 @@ const positionSlice = createSlice({
             }
             state.getSatellitesState = -1
         })
-        // builder.addCase(stopUpdateSatelliteDatabase.fulfilled, (state, action) => { // Chỉ dùng để debug
-        //     console.log('Message:', action.payload.data.message); 
-        // })
+        builder.addCase(search_list_names.fulfilled, (state, action) => {
+            state.listNameSatellites = action.payload.data
+        })
+        builder.addCase(find_satellite_info.fulfilled, (state, action) => {
+            if (action.payload.data === undefined || 
+                    (action.payload.data === 'Error')){
+                console.log('Error search');
+            }
+            else {
+                state.satelliteSearchInfo = action.payload.data
+                console.log(action.payload.data)
+            }
+                
+        })
+        
     }
 })
 

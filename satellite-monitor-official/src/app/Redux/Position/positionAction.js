@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '../../packages/core/adapters/redux-toolkit';
-import { calOrbit_all, calSatellite, updateDatabase, stopUpdateDatabase, 
-calOrbit_all_multipoint, calOrbit_one_multipoint } from '../../packages/core/services/apis/satelliteOrbit';
+import { calOrbit_all, calSatellite, updateDatabase, stopUpdateDatabase, list_names,
+calOrbit_all_multipoint, calOrbit_one_multipoint, find_satellite, load_nation_satellite } from '../../packages/core/services/apis/satelliteOrbit';
 
 const calculate_orbit = createAsyncThunk(
     'position/calOrbitAll',
@@ -60,11 +60,44 @@ const calculate_orbit_multipoint_one = createAsyncThunk(
         return {data: res};
     }
 )
+const find_satellite_info = createAsyncThunk(
+    'position/findSatelliteInfo',
+    async (key, { dispatch, getState }) => {
+        //const center = getState().positionReducer;
+        // console.log('res: ',param);
+        const res = await find_satellite(key);
+        console.log('res: ',res);
+        return {data: res};
+    }
+)
+const load_all_nation_satellite = createAsyncThunk(
+    'position/loadAllNation',
+    async (listID, { dispatch, getState }) => {
+        //const center = getState().positionReducer;
+        // console.log('res: ',param);
+        const res = await load_nation_satellite(listID);
+        console.log('res: ',res);
+        return {data: res};
+    }
+)
+const search_list_names = createAsyncThunk(
+    'position/searchListNames',
+    async (key, { dispatch, getState }) => {
+        //const center = getState().positionReducer;
+        // console.log('res: ',param);
+        const res = await list_names(key);
+        console.log('res: ',res);
+        return {data: res};
+    }
+)
 export {
     calculate_orbit,
     getSatelliteInfo,
     updateSatelliteDatabase,
     stopUpdateSatelliteDatabase,
     calculate_orbit_multipoint,
-    calculate_orbit_multipoint_one
+    calculate_orbit_multipoint_one,
+    find_satellite_info,
+    load_all_nation_satellite,
+    search_list_names
 }
