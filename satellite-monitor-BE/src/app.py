@@ -210,18 +210,21 @@ def update_database():
     # If no update process
     if pid == 0:
         try: # Try start new process
-            process = subprocess.Popen('python update_db.py', stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            process = subprocess.Popen('python update_db.py', shell=True) #, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             pid = process.pid
             print(pid)
             stdout, stderr = process.communicate()
             pid = 0
-            print(stdout, stderr)
-            if (stdout == None): # Nếu stdout == None chứng tỏ tiến trình crawl bị dừng bỏi yêu cầu từ client
+            # print(stdout, stderr)
+            if (stdout == b''): # Nếu stdout == b'' chứng tỏ tiến trình crawl bị dừng bỏi yêu cầu từ client
                 raise Exception
             # count = int(stdout.decode())
             # print(count)
         except Exception as ex:
-            errMess = str(ex)
+            if stderr != b'':
+                errMess = str(stderr)
+            else:
+                errMess = str(ex)
             print(errMess)
             response = json_util.dumps({'status': False, 'count': count, 'message':errMess})
             return Response(response, mimetype='application/json')
