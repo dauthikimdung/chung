@@ -30,22 +30,23 @@ def mongoImport(csvPath):
     global coll # collection
     csvFile = open(csvPath, encoding='utf-8')
     reader = csv.DictReader(csvFile)
-    count = 0 
+    count = 0
+    num = 0
     for each in reader:
-        row={}
-        try:
-            for field in header:
-                if field == 'NORAD Number':
-                    row[field] = int(" ".join(each[field].split()))
-                else:
-                    row[field]= " ".join(each[field].split())
-            # print(row)
-            if coll.find_one({'NORAD Number': row['NORAD Number']}) == None:
-                coll.insert_one(row)
-                count+=1
-                print(str(row['NORAD Number']),count)
-        except:
-            continue
+        num += 1
+        if num > 3497:
+            row={}
+            try:
+                for field in header:
+                    if field == 'NORAD Number':
+                        row[field] = int(" ".join(each[field].split()))
+                    else:
+                        row[field]= " ".join(each[field].split())
+                    coll.insert_one(row)
+                    count+=1
+            except Exception as e:
+                print(str(e))
+                continue
     return count
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
@@ -80,6 +81,7 @@ for i in range(2, len(list_content),3):
     id_str=list_content[i][2:7]
     id_int=int(id_str)
     row = emptyRowCSV.copy() # Tạo bản ghi dữ liệu mới (dòng mới)
+    print(id_int)
     if id_int==45123 or id_int==45125:
         continue
     if coll.find_one({'NORAD Number': id_int}) == None: # id_int not in listID
@@ -156,4 +158,4 @@ for i in range(2, len(list_content),3):
 driver.close()
 csvFile.close()
 print("Updated to csv")
-print(mongoImport(csvPath='updated_data.csv'),end='')
+print(mongoImport(csvPath='../DB_of_STL.csv'),end='')
