@@ -75,8 +75,8 @@ def search_list_names():
         query = { "Official Name": { "$regex": key+'.*', "$options" :'i' } }
     listSatellites = satellites.find(query)
     listName = [{
-    'name': " ".join(i['Official Name'].split()),
-    'id': i['NORAD Number']
+        'name': " ".join(i['Official Name'].split()),
+        'id': i['NORAD Number']
     } for i in listSatellites[:8] ]
     # listName8 = listName[:8]
     tempResp = {

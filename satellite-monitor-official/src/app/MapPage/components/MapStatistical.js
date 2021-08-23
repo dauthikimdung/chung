@@ -31,7 +31,7 @@ const MapStatistical = () => {
                 groupsNation[satellite['nation']] = []
                 nationNames.push(satellite['nation'])
             }
-            groupsNation[satellite['nation']].push(satellite['NORAD Number']);
+            groupsNation[satellite['nation']].push(satellite['id']);
             return groupsNation;
         }, {});
         let temp = []
