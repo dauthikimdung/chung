@@ -8,25 +8,25 @@ collName = "full"
 client = MongoClient(dbUrl, ssl=True, ssl_cert_reqs='CERT_NONE')
 db = client[dbName]
 coll = db[collName]
-query = { "NORAD Number": NULL}
+query = { "NORAD Number": 45117}
 # query = { "Official Name": { "$regex": 'Starlink-24', "$options" :'i' } }
-# query = {
-#     "$expr": {
-#         "$gt": [
-#             { 
-#                 "$size": { 
-#                     "$regexFindAll": { 
-#                         "input": {"$toString": "$NORAD Number"}, 
-#                         "regex": "nan"
-#                     }
-#                 }
-#             }, 
-#             0
-#         ]
-#     }
-# }
+query = {
+    "$expr": {
+        "$gt": [
+            { 
+                "$size": { 
+                    "$regexFindAll": { 
+                        "input": {"$toString": "$NORAD Number"}, 
+                        "regex": ".*45117.*"
+                    }
+                }
+            }, 
+            0
+        ]
+    }
+}
 listSatellites = coll.find(query)
-listName = [i['Official Name'] for i in listSatellites ]
+listName = [i['Orbit'] for i in listSatellites ]
 print(listName)
 
 # Group by
