@@ -73,7 +73,7 @@ def search_list_names():
     except:
         key = temp.replace("(","\(").replace(")","\)").replace("[","\[").replace("]","\]")
         query = { "Official Name": { "$regex": key+'.*', "$options" :'i' } }
-    listSatellites = satellites.find(query)
+    listSatellites = list(satellites.find(query))
     listName = [{
         'name': " ".join(i['Official Name'].split()),
         'id': i['NORAD Number']

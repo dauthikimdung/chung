@@ -9,28 +9,29 @@ collName = "full"
 client = MongoClient(dbUrl, ssl=True, ssl_cert_reqs='CERT_NONE')
 db = client[dbName]
 coll = db[collName]
-query = { "NORAD Number": 45117}
+query = { "NORAD Number": 99752}
 # query = { "Official Name": { "$regex": 'Starlink-24', "$options" :'i' } }
-query = {
-    "$expr": {
-        "$gt": [
-            { 
-                "$size": { 
-                    "$regexFindAll": { 
-                        "input": {"$toString": "$NORAD Number"}, 
-                        "regex": ".*45117.*"
-                    }
-                }
-            }, 
-            0
-        ]
-    }
-}
-listSatellites = list(coll.find())
+# query = {
+#     "$expr": {
+#         "$gt": [
+#             { 
+#                 "$size": { 
+#                     "$regexFindAll": { 
+#                         "input": {"$toString": "$NORAD Number"}, 
+#                         "regex": ""
+#                     }
+#                 }
+#             }, 
+#             0
+#         ]
+#     }
+# }
+listSatellites = list(coll.find(query))
 listID = [i["NORAD Number"] for i in listSatellites ]
-data = json_util.dumps(listID)
-IDFile = open('id.json', 'w+', newline='', encoding='utf-8')
-IDFile.writelines(data)
+print(listID.__len__())
+# data = json_util.dumps(listID)
+# IDFile = open('id.json', 'w+', newline='', encoding='utf-8')
+# IDFile.writelines(data)
 # print(45117 in listID)
 # print(45117 in listID)
 # print(45117 in listID)

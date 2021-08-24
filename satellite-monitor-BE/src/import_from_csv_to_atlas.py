@@ -1,3 +1,4 @@
+from os import error
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 # from selenium.webdriver.common.keys import Keys
@@ -32,27 +33,32 @@ def mongoImport(csvPath):
     reader = csv.DictReader(csvFile)
     count = 0
     num = 0
+    l_same = []
+    l_errors = []
+    # print(list(reader).__len__())
     for each in reader:
         num += 1
-        if num > 3497:
-            row={}
-            try:
-                for field in header:
-                    if field == 'NORAD Number':
-                        row[field] = int(" ".join(each[field].split()))
-                    else:
-                        row[field]= " ".join(each[field].split())
-                # print(row)
-                if coll.find_one({'NORAD Number': row['NORAD Number']}) == None:
-                    coll.insert_one(row)
-                    count+=1
-                    print(str(row['NORAD Number']), count)
-            except:
-                continue
+        row={}
+        try:
+            for field in header:
+                if field == 'NORAD Number':
+                    row[field] = int(" ".join(each[field].split()))
+                else:
+                    row[field]= " ".join(each[field].split())
+            if coll.find_one({'NORAD Number': row['NORAD Number']}) == None:
+                coll.insert_one(row)
+                count+=1
+            else:
+                l_same.append(row['NORAD Number'])
+        except Exception as e:
+            l_errors.append(row["Official Name"])
+            continue
+    print(l_same.__len__(), l_same)
+    print(l_errors.__len__(), l_errors)
     return count
 # # Dòng tên trường
 header= ["Official Name","NORAD Number","Nation","Operator","Users","Application",
 "Detailed Purpose","Orbit","Class of Orbit","Type of Orbit","Period (minutes)","Mass (kg)",
 "COSPAR Number","Date of Launch","Expected Lifetime (yrs)","Equipment","Describe"]
 
-print(mongoImport(csvPath='../DB_of_STL.csv'),end='')
+print(mongoImport(csvPath='new_DB.csv'), end='')
