@@ -14,7 +14,7 @@ export default function MapPage() {
             <Layout>
                 <div className='map-wrapper'>
                     <MapActions />
-                    <SatelliteSearch />
+                    {/* <SatelliteSearch /> */}
                 </div>                
                 <div className='map-wrapper' >
                     <MapContent />

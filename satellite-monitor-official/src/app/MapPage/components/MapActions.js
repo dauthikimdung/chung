@@ -200,7 +200,7 @@ const MapActions = () => {
             </div>
             
             <div className='map-actions-items'>
-                {/* <MapFilter></MapFilter> */}
+                <MapFilter></MapFilter>
                 <strong>&nbsp;&nbsp;Số vệ tinh hiển thị: </strong> &nbsp;&nbsp;{totalSatellite} / {baseTotalSatellite}                
             </div>
             <> {

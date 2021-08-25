@@ -202,12 +202,12 @@ const Header = () => {
                         { interfaceMapActionState ? "Chọn 1 điểm" : "Chọn nhiều điểm"}
                     </li>
                     <li>
-                        <Dropdown overlay={menu} placement='bottomLeft' arrow>
+                        {/* <Dropdown overlay={menu} placement='bottomLeft' arrow>
                             <div style={{ display: 'flex', alignItems: 'center' }} onClick={() => console.log(indexPredictPoint, interfaceMapActionState)}>
                                 Cài đặt
                                 <DownOutlined style={{ fontSize: '1rem', fontWeight: 'bold', padding: '3px 0px 0px 5px' }} />
                             </div>
-                        </Dropdown>
+                        </Dropdown> */}
                     </li>
                 </ul>
             </div>
