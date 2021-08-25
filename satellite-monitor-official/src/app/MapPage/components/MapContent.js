@@ -13,8 +13,19 @@ import MapSelectArea from './MapSelectArea';
 import pointInPolygon from 'point-in-polygon'
 import { message } from '../../packages/core/adapters/ant-design';
 import MapStatistical from './MapStatistical'
+import centerMarkerIcon from '../../Assets/Images/marker-icon-2x-red.png'
+import centerMarkerShadowIcon from '../../Assets/Images/marker-shadow.png'
+
 const MapContent = (props) => {
-    
+
+var icon = new L.Icon({
+  iconUrl: centerMarkerIcon,
+  shadowUrl: centerMarkerShadowIcon,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
     const mapRef = useRef();
     const dispatch = useDispatch();
     const [zoom, setZoom] = useState(10)
@@ -24,11 +35,11 @@ const MapContent = (props) => {
     const { center, listSatellite, indexPredictPoint, isInside, 
     interfaceMapActionState, coordinateOfMarkers } = useSelector(state => state.positionReducer);
     const [markers, setMarkers] = useState([
-        {id: 0, marker: L.marker({lat:0, lng:0}), popup: ''},
-        {id: 1, marker: L.marker({lat:0, lng:0}), popup: ''},
-        {id: 2, marker: L.marker({lat:0, lng:0}), popup: ''},
-        {id: 3, marker: L.marker({lat:0, lng:0}), popup: ''},
-        {id: 4, marker: L.marker({lat:0, lng:0}), popup: ''},
+        {id: 0, marker: L.marker([0, 0]), popup: ''},
+        {id: 1, marker: L.marker([0, 0]), popup: ''},
+        {id: 2, marker: L.marker([0, 0]), popup: ''},
+        {id: 3, marker: L.marker([0, 0]), popup: ''},
+        {id: 4, marker: L.marker([0, 0],{icon: icon}), popup: ''},
     ])
     const geocoder = L.Control.Geocoder.nominatim();
 

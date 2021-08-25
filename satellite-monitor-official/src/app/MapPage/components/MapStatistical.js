@@ -31,7 +31,7 @@ const MapStatistical = () => {
                 groupsNation[satellite['nation']] = []
                 nationNames.push(satellite['nation'])
             }
-            groupsNation[satellite['nation']].push(satellite['id']);
+            groupsNation[satellite['nation']].push({id: satellite['id'], name: satellite['name']});
             return groupsNation;
         }, {});
         let temp = []
@@ -39,7 +39,8 @@ const MapStatistical = () => {
             temp.push(
                 {
                     nation: name,
-                    number: group[name].length
+                    number: group[name].length,
+                    listSatellites: group[name]
                 }
             )
         });

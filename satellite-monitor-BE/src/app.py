@@ -183,6 +183,7 @@ def satellite_track_all():
                                 "location": '',
                             })
                         result.append({
+                            "id": id_int,
                             "name": name_sate,
                             "coordinate": coordinates,
                             "nation": satellite['Nation']
