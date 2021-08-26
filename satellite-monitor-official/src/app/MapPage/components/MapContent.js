@@ -34,13 +34,14 @@ var icon = new L.Icon({
     const [checkIsInside, setCheckIsInside] = useState(false)
     const { center, listSatellite, indexPredictPoint, isInside, 
     interfaceMapActionState, coordinateOfMarkers } = useSelector(state => state.positionReducer);
-    const [markers, setMarkers] = useState([
+    const defaultMarkers = [
         {id: 0, marker: L.marker([0, 0]), popup: ''},
         {id: 1, marker: L.marker([0, 0]), popup: ''},
         {id: 2, marker: L.marker([0, 0]), popup: ''},
         {id: 3, marker: L.marker([0, 0]), popup: ''},
         {id: 4, marker: L.marker([0, 0],{icon: icon}), popup: ''},
-    ])
+    ]
+    const [markers, setMarkers] = useState(defaultMarkers)
     const geocoder = L.Control.Geocoder.nominatim();
 
     const updateItem =(id, whichvalue, newvalue) => {
@@ -110,6 +111,25 @@ var icon = new L.Icon({
         }
         setPolygonDisplay(temp)
     }
+    useEffect(() => {
+        if (interfaceMapActionState) { // Chuyển sang chức năng 1 điểm
+            // Xóa các điểm đã chọn trong đa điểm
+            let temp = [coordinateOfMarkers[0],{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''}]
+            dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
+            temp.map( (item, idx) => {
+                    var reverseidx = 4 - idx
+                    var index = markers.findIndex(x=> x.id === reverseidx)
+                    var m = markers[index].marker.setLatLng(item)
+                    updateItem(reverseidx, ['popup','marker'], ['', m])
+                } 
+            )        
+            setPolygonDisplay([])
+
+        }
+       
+
+    }, [interfaceMapActionState])
+
     // Thực thi khi CoordinateOfMarkers thay đổi
     useEffect(() => {
         console.log('coordinateOfMarkers')

@@ -9,14 +9,14 @@ import { search_list_names, find_satellite_info } from '../../Redux/Position';
 const SatelliteSearch = () => {
     const dispatch = useDispatch();
     const { listNameSatellites, satelliteSearchInfo } = useSelector(state => state.positionReducer);
-
+    const [selectedID, setSelectedID] = useState(0)
     useEffect(() => {        
         setOptions(searchResult());
     }, [listNameSatellites])
     const searchResult = () =>
         listNameSatellites.listName.map((item, idx) => {
         return {
-            value: item.name,
+            value: item.id,
             label: (
                 <div
                     style={{
@@ -24,8 +24,11 @@ const SatelliteSearch = () => {
                     justifyContent: 'space-between',
                     }}
                 >
-                    <span>{item.name}</span>
                     <strong>{item.id}</strong>
+                    <span style={{
+                        width: '520px',
+                        'overflow-x': 'auto'
+                    }}>{item.name}</span>
                 </div>
             )
         };
@@ -34,25 +37,25 @@ const SatelliteSearch = () => {
 
     const [options, setOptions] = useState([]);
 
-    const handleSearch = (value: string) => {
+    const handleSearch = (value) => {
         dispatch(search_list_names(value))
     };
 
-    const onSelect = (value: string) => {
+    const onSelect = (value) => {
         dispatch(find_satellite_info(value));
     }
     return (
         <>
             <div className='search-satellite-wrapper'>
                 <AutoComplete
-                    dropdownMatchSelectWidth={300}
-                    style={{ width: 500, height:50 }}
+                    dropdownMatchSelectWidth={400}
+                    style={{ width: 600, height:50 }}
                     options={options}
                     onSelect={onSelect}
                     onSearch={handleSearch}
                     >
                     <Input.Search size="large" placeholder="Số NORAD hoặc Tên vệ tinh" 
-                        style={{ width: '500px', height:'50px' }} enterButton 
+                        style={{ width: '600px', height:'50px' }} enterButton 
                     />
                 </AutoComplete>
                 <h3><strong>Info of Satellite:</strong> {satelliteSearchInfo["Official Name"]}</h3>

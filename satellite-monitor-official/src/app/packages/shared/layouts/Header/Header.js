@@ -184,8 +184,6 @@ const Header = () => {
         dispatch(setInterfaceMapActionState(!interfaceMapActionState))
         if(!interfaceMapActionState){
             dispatch(setIndexPredictPoint(0))
-            let temp = [coordinateOfMarkers[0],{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''},{lat:'', lng:''}]
-            dispatch(setCoordinateOfMarkers(JSON.parse(JSON.stringify(temp))))
         }        
     }
     return (
