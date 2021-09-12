@@ -58,34 +58,34 @@ const SatelliteSearch = () => {
                         style={{ width: '600px', height:'50px' }} enterButton 
                     />
                 </AutoComplete>
-                <h3><strong>Info of Satellite:</strong> {satelliteSearchInfo["Official Name"]}</h3>
+                <h3><strong>Thông tin vệ tinh:</strong> {satelliteSearchInfo["Official Name"]}</h3>
                 <table>
                     <tbody>
                         <tr>
-                            <td colSpan="1"><strong>NORAD Number:</strong> {satelliteSearchInfo["NORAD Number"]}</td>
-                            <td colSpan="2"><strong>COSPAR Number:</strong> {satelliteSearchInfo["COSPAR Number"]}</td>
-                            <td colSpan="1"><strong>Nation:</strong> {satelliteSearchInfo["Nation"]}</td>
+                            <td colSpan="1"><strong>Số NORAD:</strong> {satelliteSearchInfo["NORAD Number"]}</td>
+                            <td colSpan="2"><strong>Số COSPAR:</strong> {satelliteSearchInfo["COSPAR Number"]}</td>
+                            <td colSpan="1"><strong>Quốc gia:</strong> {satelliteSearchInfo["Nation"]}</td>
                         </tr>
                         <tr>
-                            <td colSpan="2"><strong>Operator:</strong> {satelliteSearchInfo["Operator"]}</td>
-                            <td colSpan="1"><strong>Application:</strong> {satelliteSearchInfo["Application"]}</td> 
-                            <td colSpan="1"><strong>Users:</strong> {satelliteSearchInfo["Users"]}</td>
+                            <td colSpan="2"><strong>Nhà điều hành:</strong> {satelliteSearchInfo["Operator"]}</td>
+                            <td colSpan="1"><strong>Ứng dụng:</strong> {satelliteSearchInfo["Application"]}</td> 
+                            <td colSpan="1"><strong>Người dùng:</strong> {satelliteSearchInfo["Users"]}</td>
                         </tr>
                         <tr>
-                            <td colSpan="2"><strong>Orbit:</strong> {satelliteSearchInfo["Orbit"]}</td>
-                            <td colSpan="1"><strong>Class of Orbit:</strong> {satelliteSearchInfo["Class of Orbit"]}</td>                  
-                            <td colSpan="1"><strong>Type of Orbit:</strong> {satelliteSearchInfo["Type of Orbit"]}</td>
+                            <td colSpan="2"><strong>Quỹ đạo:</strong> {satelliteSearchInfo["Orbit"]}</td>
+                            <td colSpan="1"><strong>Lớp quỹ đạo:</strong> {satelliteSearchInfo["Class of Orbit"]}</td>                  
+                            <td colSpan="1"><strong>Loại quỹ đạo:</strong> {satelliteSearchInfo["Type of Orbit"]}</td>
                         </tr>
                         <tr>
-                            <td colSpan="3"><strong>Detailed Purpose:</strong> {satelliteSearchInfo["Detailed Purpose"]}</td>
-                            <td colSpan="1"><strong>Period:</strong> {satelliteSearchInfo["Period (minutes)"]}</td>
+                            <td colSpan="3"><strong>Mục đích chi tiết:</strong> {satelliteSearchInfo["Detailed Purpose"]}</td>
+                            <td colSpan="1"><strong>Chu kỳ:</strong> {satelliteSearchInfo["Period (minutes)"]}</td>
                         </tr>
                         <tr>
-                            <td colSpan="3"><strong>Equipment:</strong> {satelliteSearchInfo["Equipment"]}</td>
-                            <td colSpan="1"><strong>Mass:</strong> {satelliteSearchInfo["Mass (kg)"]}</td>
+                            <td colSpan="3"><strong>Trang bị:</strong> {satelliteSearchInfo["Equipment"]}</td>
+                            <td colSpan="1"><strong>Khối lượng:</strong> {satelliteSearchInfo["Mass (kg)"]}</td>
                         </tr>
                         <tr>                        
-                            <td colSpan="4"><strong>Describe:</strong> {satelliteSearchInfo["Describe"]}</td>
+                            <td colSpan="4"><strong>Mô tả:</strong> {satelliteSearchInfo["Describe"]}</td>
                         </tr>
                     </tbody>
                 </table>
