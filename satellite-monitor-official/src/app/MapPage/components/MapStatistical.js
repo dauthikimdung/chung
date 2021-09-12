@@ -72,7 +72,7 @@ const MapStatistical = () => {
     };
     return (
         <>
-            <Table columns={columns} dataSource={nations} onRow={(record, rowIndex) => {
+            <Table scroll={{ y: 270 }} columns={columns} dataSource={nations} onRow={(record, rowIndex) => {
                 return {
                 onClick: event => {
                     setVisible_ModalNotice(true)
@@ -94,7 +94,7 @@ const MapStatistical = () => {
             <Table columns={columnsSatellite} dataSource={nations.filter((nation) => {
                         return nation.nation === specificNation})[0].listSatellites
                     }
-                        scroll={{ y: 240 }}
+                        scroll={{ y: 270 }}
                     />
         </Modal>
         </>
