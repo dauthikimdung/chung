@@ -11,7 +11,14 @@ const MapStatistical = () => {
 
     const { baseListSatellite } = useSelector(state => state.positionReducer);
     const [nations, setNations] = useState([]);
-    const [specificNation, setSpecificNation] = useState('USA');
+    const [specificNation, setSpecificNation] = useState('');
+    const [listSatelliteDatasource, setListSatelliteDatasource] = useState([]);
+    useEffect(() => {
+        let temp = nations.filter((nation) => {
+                        return nation.nation === specificNation})
+        if (temp.length > 0)
+            setListSatelliteDatasource(temp[0].listSatellites)
+    }, [specificNation])
     const columns = [
         {
             title: 'Quốc gia',
@@ -91,9 +98,7 @@ const MapStatistical = () => {
                 </Button>
             ]}
         >
-            <Table columns={columnsSatellite} dataSource={nations.filter((nation) => {
-                        return nation.nation === specificNation})[0].listSatellites
-                    }
+            <Table columns={columnsSatellite} dataSource={listSatelliteDatasource}
                         scroll={{ y: 270 }}
                     />
         </Modal>
