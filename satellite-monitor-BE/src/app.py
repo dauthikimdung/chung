@@ -350,6 +350,7 @@ def orbit_stl(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2,
                 "location": ''
             })
     aStatellite = {
+        "id": id_int,
         "name": name_sate,
         "coordinate": coordinates,
         "nation": satellite['Nation']
@@ -531,6 +532,7 @@ def orbit_stl_one(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1,
                 "location": locate
             })
     aStatellite = {
+        "id": id,
         "coordinate": coordinates,
         "nation": satellite['Nation']
     }

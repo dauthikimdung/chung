@@ -90,14 +90,15 @@ const MapStatistical = () => {
             <Modal //// Modal Notice
             title={`Danh sách các vệ tinh của`}
             visible={modalNoticeVisible}
-            width={1000}            
+            width={1000}
             maskClosable={true}
+            closable={true}
             footer={[
                 <Button key='modal-notice' onClick={modalNoticeHandleOk}>
                     Đóng
                 </Button>
             ]}
-        >
+            >
             <Table columns={columnsSatellite} dataSource={listSatelliteDatasource}
                         scroll={{ y: 270 }}
                     />
