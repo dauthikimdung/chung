@@ -94,8 +94,7 @@ const MapStatistical = () => {
             title={`Danh sách các vệ tinh của ${specificNation} ( ${numberSpecificNation} vệ tinh)`}
             visible={modalNoticeVisible}
             width={1000}
-            maskClosable={true}
-            closable={true}
+            closable={false}
             footer={[
                 <Button key='modal-notice' onClick={modalNoticeHandleOk}>
                     Đóng
