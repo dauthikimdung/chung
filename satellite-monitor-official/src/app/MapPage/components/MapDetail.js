@@ -11,8 +11,8 @@ const MapDetail = () => {
             <table>
                 <tbody>
                     <tr>
-                        <td colSpan="1"><strong>Số hiệu phóng:</strong> {currentSatellite.detail.id}</td>
-                        <td colSpan="1"><strong>Số COSPAR:</strong> {currentSatellite.info["COSPAR Number"]}</td>
+                        <td colSpan="1"><strong>Số hiệu Norad:</strong> {currentSatellite.detail.id}</td>
+                        <td colSpan="1"><strong>Số hiệu phóng:</strong> {currentSatellite.info["COSPAR Number"]}</td>
                         <td colSpan="1"><strong>Vĩ tuyến(º):</strong> {currentSatellite.detail.lat != null ? currentSatellite.detail.lat.toFixed(6) : ""}</td>
                         <td colSpan="1"><strong>Kinh tuyến(º):</strong> {currentSatellite.detail.long != null ? currentSatellite.detail.long.toFixed(6) : ""}</td>
 
