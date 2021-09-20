@@ -11,8 +11,8 @@ const MapFilter = () => {
     const dispatch = useDispatch();
     const { baseListSatellite } = useSelector(state => state.positionReducer);
     const CheckboxGroup = Checkbox.Group;
-    const plainOptions = ['Starlink', 'SpaceBEE', 'OneWeb', 'Others']; //Cosmos, USA, ORBCOMM, Lemur, Iridium, Dove, Yaogan  
-    const defaultCheckedList = ['Starlink', 'SpaceBEE', 'OneWeb', 'Others'];
+    const plainOptions = ['Starlink', 'SpaceBEE', 'OneWeb', 'Các vệ tinh khác']; //Cosmos, USA, ORBCOMM, Lemur, Iridium, Dove, Yaogan  
+    const defaultCheckedList = ['Starlink', 'SpaceBEE', 'OneWeb', 'Các vệ tinh khác'];
     
     const [checkedList, setCheckedList] = useState(defaultCheckedList);
     const [indeterminate, setIndeterminate] = useState(true);
@@ -21,7 +21,7 @@ const MapFilter = () => {
         setCheckedList(list);
         setIndeterminate(!!list.length && list.length < plainOptions.length);
         setCheckAll(list.length === plainOptions.length);  
-        if (list.includes('Others')){
+        if (list.includes('Các vệ tinh khác')){
             console.log(typeof(baseListSatellite))
             dispatch(
                 filterSatellite(
@@ -52,7 +52,7 @@ const MapFilter = () => {
     return (
         <>
             <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-                Check all
+                Chọn hết
             </Checkbox>
             <CheckboxGroup options={plainOptions} value={checkedList} onChange={onChange} />
         </>

@@ -72,9 +72,12 @@ const SatelliteSearch = () => {
                             <td colSpan="1"><strong>Người dùng:</strong> {satelliteSearchInfo["Users"]}</td>
                         </tr>
                         <tr>
-                            <td colSpan="2"><strong>Quỹ đạo:</strong> {satelliteSearchInfo["Orbit"]}</td>
-                            <td colSpan="1"><strong>Lớp quỹ đạo:</strong> {satelliteSearchInfo["Class of Orbit"]}</td>                  
+                            <td colSpan="2"><strong>Ngày phóng:</strong> {satelliteSearchInfo["Date of Launch"]}</td>
+                            <td colSpan="1"><strong>Lớp quỹ đạo:</strong> {satelliteSearchInfo["Class of Orbit"]}</td>
                             <td colSpan="1"><strong>Kiểu quỹ đạo:</strong> {satelliteSearchInfo["Type of Orbit"]}</td>
+                        </tr>
+                        <tr>                                     
+                            <td colSpan="4"><strong>Quỹ đạo (cận điểm*viễn điểm,góc nghiêng):</strong> {satelliteSearchInfo["Orbit"]}</td>
                         </tr>
                         <tr>
                             <td colSpan="3"><strong>Mục đích cụ thể:</strong> {satelliteSearchInfo["Detailed Purpose"]}</td>
