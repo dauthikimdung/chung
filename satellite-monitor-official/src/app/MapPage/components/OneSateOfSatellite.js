@@ -4,7 +4,7 @@ const OneSateOfSatellite = ({ item }) => {
     return (
             <tr>
                 <td>{item.trvn}</td>
-                <td>{Number.parseFloat(item.alt)}</td>
+                <td>{Number.parseFloat(item.alt.toFixed(6))}</td>
                 <td>{item.az.toFixed(6)}</td>
                 <td>{item.lat.toFixed(6)}</td>
                 <td>{item.long.toFixed(6)}</td>
