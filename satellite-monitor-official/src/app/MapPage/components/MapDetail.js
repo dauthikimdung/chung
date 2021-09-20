@@ -11,14 +11,14 @@ const MapDetail = () => {
             <table>
                 <tbody>
                     <tr>
-                        <td colSpan="1"><strong>Số NORAD:</strong> {currentSatellite.detail.id}</td>
+                        <td colSpan="1"><strong>Số hiệu phóng:</strong> {currentSatellite.detail.id}</td>
                         <td colSpan="1"><strong>Số COSPAR:</strong> {currentSatellite.info["COSPAR Number"]}</td>
-                        <td colSpan="1"><strong>Vĩ độ:</strong> {currentSatellite.detail.lat != null ? currentSatellite.detail.lat.toFixed(6) : ""}</td>
-                        <td colSpan="1"><strong>Kinh độ:</strong> {currentSatellite.detail.long != null ? currentSatellite.detail.long.toFixed(6) : ""}</td>
+                        <td colSpan="1"><strong>Vĩ tuyến(º):</strong> {currentSatellite.detail.lat != null ? currentSatellite.detail.lat.toFixed(6) : ""}</td>
+                        <td colSpan="1"><strong>Kinh tuyến(º):</strong> {currentSatellite.detail.long != null ? currentSatellite.detail.long.toFixed(6) : ""}</td>
 
                     </tr>
                     <tr>
-                        <td colSpan="3"><strong>Tên:</strong> {currentSatellite.info["Official Name"]}</td>
+                        <td colSpan="3"><strong>Tên chính thức:</strong> {currentSatellite.info["Official Name"]}</td>
                         <td colSpan="1"><strong>Quốc gia:</strong> {currentSatellite.info["Nation"]}</td>
                     </tr>
                     <tr>
@@ -26,24 +26,24 @@ const MapDetail = () => {
                     <tr>                   
                         <td colSpan="1"><strong>Người dùng:</strong> {currentSatellite.info["Users"]}</td>
                         <td colSpan="2"><strong>Ứng dụng:</strong> {currentSatellite.info["Application"]}</td> 
-                        <td colSpan="1"><strong>Nhà điều hành:</strong> {currentSatellite.info["Operator"]}</td>
+                        <td colSpan="1"><strong>Nhà vận hành:</strong> {currentSatellite.info["Operator"]}</td>
                     </tr>
                     <tr>                                                
-                        <td colSpan="1"><strong>Độ cao:</strong> {currentSatellite.detail.elevation}</td>
-                        <td colSpan="1"><strong>Azim:</strong> {currentSatellite.detail.az != null ? currentSatellite.detail.az.toFixed(6) : ""}</td>
-                        <td colSpan="1"><strong>Alt:</strong> {currentSatellite.detail.alt != null ? Number.parseFloat(currentSatellite.detail.alt).toExponential(4): ""}</td>
-                        <td colSpan="1"><strong>Khoảng cách:</strong> {currentSatellite.detail.range}</td>
+                        <td colSpan="1"><strong>Góc ngẩng(º) :</strong> {currentSatellite.detail.elevation}</td>
+                        <td colSpan="1"><strong>Phương vị(º):</strong> {currentSatellite.detail.az != null ? currentSatellite.detail.az.toFixed(6) : ""}</td>
+                        <td colSpan="1"><strong>Độ cao(km):</strong> {currentSatellite.detail.alt != null ? Number.parseFloat(currentSatellite.detail.alt).toExponential(4): ""}</td>
+                        <td colSpan="1"><strong>Khoảng cách(km):</strong> {currentSatellite.detail.range}</td>
                     </tr>
                     <tr>
                         <td colSpan="1"><strong>Lớp quỹ đạo:</strong> {currentSatellite.info["Class of Orbit"]}</td>                  
-                        <td colSpan="1"><strong>Loại quỹ đạo:</strong> {currentSatellite.info["Type of Orbit"]}</td>
-                        <td colSpan="2"><strong>Quỹ đạo:</strong> {currentSatellite.info["Orbit"]}</td>
+                        <td colSpan="1"><strong>Kiểu quỹ đạo:</strong> {currentSatellite.info["Type of Orbit"]}</td>
+                        <td colSpan="2"><strong>Quỹ đạo (cận điểm * viễn điểm, góc nghiêng):</strong> {currentSatellite.info["Orbit"]}</td>
                     </tr>
                     <tr>
-                        <td colSpan="1"><strong>Mục đích chi tiết:</strong> {currentSatellite.info["Detailed Purpose"]}</td>
+                        <td colSpan="1"><strong>Mục đích cụ thể:</strong> {currentSatellite.info["Detailed Purpose"]}</td>
                         <td colSpan="1"><strong>Trang bị:</strong> {currentSatellite.info["Equipment"]}</td>
-                        <td colSpan="1"><strong>Chu kỳ:</strong> {currentSatellite.info["Period (minutes)"]}</td>
-                        <td colSpan="1"><strong>Khối lượng:</strong> {currentSatellite.info["Mass (kg)"]}</td>
+                        <td colSpan="1"><strong>Chu kỳ (phút):</strong> {currentSatellite.info["Period (minutes)"]}</td>
+                        <td colSpan="1"><strong>Khối lượng (kg):</strong> {currentSatellite.info["Mass (kg)"]}</td>
                     </tr>
                     <tr>                        
                         <td colSpan="4"><strong>Mô tả:</strong> {currentSatellite.info["Describe"]}</td>
