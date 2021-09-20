@@ -11,13 +11,16 @@ const MapStatistical = () => {
 
     const { baseListSatellite } = useSelector(state => state.positionReducer);
     const [nations, setNations] = useState([]);
+    const [numberSpecificNation, setNumberSpecificNation] = useState(0);
     const [specificNation, setSpecificNation] = useState('');
     const [listSatelliteDatasource, setListSatelliteDatasource] = useState([]);
     useEffect(() => {
         let temp = nations.filter((nation) => {
                         return nation.nation === specificNation})
-        if (temp.length > 0)
+        if (temp.length > 0) {
+            setNumberSpecificNation(temp[0].number)
             setListSatelliteDatasource(temp[0].listSatellites)
+        }
     }, [specificNation])
     const columns = [
         {
@@ -88,7 +91,7 @@ const MapStatistical = () => {
                 };
             }}/>
             <Modal //// Modal Notice
-            title={`Danh sách các vệ tinh của ${specificNation}`}
+            title={`Danh sách các vệ tinh của ${specificNation} ( ${numberSpecificNation} vệ tinh)`}
             visible={modalNoticeVisible}
             width={1000}
             maskClosable={true}
