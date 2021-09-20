@@ -88,7 +88,7 @@ const MapStatistical = () => {
                 };
             }}/>
             <Modal //// Modal Notice
-            title={`Danh sách các vệ tinh của`}
+            title={`Danh sách các vệ tinh của ${specificNation}`}
             visible={modalNoticeVisible}
             width={1000}
             maskClosable={true}

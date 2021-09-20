@@ -57,12 +57,12 @@ const MapDetail = () => {
             <tbody>
             <tr>
                 <td><strong>Thời gian</strong></td>          
-                <td><strong>Độ cao</strong></td>
-                <td><strong>Azim</strong></td>
-                <td><strong>Vĩ độ</strong></td>
-                <td><strong>Kinh độ</strong></td>
-                <td><strong>Alt</strong></td>
-                <td><strong>Khoảng cách</strong></td>
+                <td><strong>Góc ngẩng(º)</strong></td>
+                <td><strong>Phương vị(º)</strong></td>
+                <td><strong>Vĩ tuyến(º)</strong></td>
+                <td><strong>Kinh tuyến(º) </strong></td>
+                <td><strong>Độ cao(km)</strong></td>
+                <td><strong>Khoảng cách(km)</strong></td>
                 <td><strong>Địa điểm</strong></td>
             </tr>
             {

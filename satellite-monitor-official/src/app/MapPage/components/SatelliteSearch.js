@@ -62,23 +62,23 @@ const SatelliteSearch = () => {
                 <table>
                     <tbody>
                         <tr>
-                            <td colSpan="1"><strong>Số NORAD:</strong> {satelliteSearchInfo["NORAD Number"]}</td>
-                            <td colSpan="2"><strong>Số COSPAR:</strong> {satelliteSearchInfo["COSPAR Number"]}</td>
+                            <td colSpan="1"><strong>Số hiệu NORAD:</strong> {satelliteSearchInfo["NORAD Number"]}</td>
+                            <td colSpan="2"><strong>Số hiệu phóng:</strong> {satelliteSearchInfo["COSPAR Number"]}</td>
                             <td colSpan="1"><strong>Quốc gia:</strong> {satelliteSearchInfo["Nation"]}</td>
                         </tr>
                         <tr>
-                            <td colSpan="2"><strong>Nhà điều hành:</strong> {satelliteSearchInfo["Operator"]}</td>
+                            <td colSpan="2"><strong>Nhà vận hành:</strong> {satelliteSearchInfo["Operator"]}</td>
                             <td colSpan="1"><strong>Ứng dụng:</strong> {satelliteSearchInfo["Application"]}</td> 
                             <td colSpan="1"><strong>Người dùng:</strong> {satelliteSearchInfo["Users"]}</td>
                         </tr>
                         <tr>
                             <td colSpan="2"><strong>Quỹ đạo:</strong> {satelliteSearchInfo["Orbit"]}</td>
                             <td colSpan="1"><strong>Lớp quỹ đạo:</strong> {satelliteSearchInfo["Class of Orbit"]}</td>                  
-                            <td colSpan="1"><strong>Loại quỹ đạo:</strong> {satelliteSearchInfo["Type of Orbit"]}</td>
+                            <td colSpan="1"><strong>Kiểu quỹ đạo:</strong> {satelliteSearchInfo["Type of Orbit"]}</td>
                         </tr>
                         <tr>
-                            <td colSpan="3"><strong>Mục đích chi tiết:</strong> {satelliteSearchInfo["Detailed Purpose"]}</td>
-                            <td colSpan="1"><strong>Chu kỳ:</strong> {satelliteSearchInfo["Period (minutes)"]}</td>
+                            <td colSpan="3"><strong>Mục đích cụ thể:</strong> {satelliteSearchInfo["Detailed Purpose"]}</td>
+                            <td colSpan="1"><strong>Chu kỳ (phút):</strong> {satelliteSearchInfo["Period (minutes)"]}</td>
                         </tr>
                         <tr>
                             <td colSpan="3"><strong>Trang bị:</strong> {satelliteSearchInfo["Equipment"]}</td>
