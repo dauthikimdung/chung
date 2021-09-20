@@ -37,7 +37,7 @@ const MapDetail = () => {
                         <td colSpan="1"><strong>Phương vị(º):</strong> {currentSatellite.detail.az != null ? currentSatellite.detail.az.toFixed(6) : ""}</td>
                     </tr>
                     <tr>
-                        <td colSpan="1"><strong>Độ cao(km):</strong> {currentSatellite.detail.alt != null ? Number.parseFloat(currentSatellite.detail.alt).toExponential(4): ""}</td>
+                        <td colSpan="1"><strong>Độ cao(km):</strong> {currentSatellite.detail.alt != null ? Number.parseFloat(currentSatellite.detail.alt): ""}</td>
                         <td colSpan="1"><strong>Khoảng cách(km):</strong> {currentSatellite.detail.range}</td>
                     </tr>
                     <tr>

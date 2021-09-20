@@ -4,11 +4,11 @@ const OneSateOfSatellite = ({ item }) => {
     return (
             <tr>
                 <td>{item.trvn}</td>
-                <td>{item.elevation}</td>
+                <td>{Number.parseFloat(item.alt)}</td>
                 <td>{item.az.toFixed(6)}</td>
                 <td>{item.lat.toFixed(6)}</td>
                 <td>{item.long.toFixed(6)}</td>
-                <td>{Number.parseFloat(item.alt).toExponential(4)}</td>
+                <td>{item.elevation}</td>
                 <td>{item.range}</td>                
                 <td>{item.location}</td>
             </tr>
@@ -16,3 +16,4 @@ const OneSateOfSatellite = ({ item }) => {
 };
 
 export default OneSateOfSatellite;
+// .toExponential(4)
