@@ -1,14 +1,14 @@
 import './MapStatistical.css';
 
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { filterSatellite } from '../../Redux/Position';
 import { Table, Modal, Button,
 ExclamationCircleOutlined, SyncOutlined, CheckCircleOutlined } from '../../packages/core/adapters/ant-design';
 
 
 const MapStatistical = () => {
-
+    const dispatch = useDispatch();
     const { baseListSatellite } = useSelector(state => state.positionReducer);
     const [nations, setNations] = useState([]);
     const [numberSpecificNation, setNumberSpecificNation] = useState(0);
@@ -20,7 +20,20 @@ const MapStatistical = () => {
         if (temp.length > 0) {
             setNumberSpecificNation(temp[0].number)
             setListSatelliteDatasource(temp[0].listSatellites)
+            var listid = []
+            temp[0].listSatellites
+            .map((s,index) => 
+            {
+                listid.push(s.id)
+            })
+            console.log(listid)
+            dispatch(
+                filterSatellite(
+                    baseListSatellite.filter((satellite) => {
+                        return listid.includes(satellite.id)
+                    })))
         }
+        
     }, [specificNation])
     const columns = [
         {
@@ -86,7 +99,7 @@ const MapStatistical = () => {
                 return {
                 onClick: event => {
                     setVisible_ModalNotice(true)
-                    setSpecificNation(record.nation)
+                    setSpecificNation(record.nation)                    
                     }, // click row
                 };
             }}/>
@@ -102,7 +115,19 @@ const MapStatistical = () => {
             ]}
             >
             <Table columns={columnsSatellite} dataSource={listSatelliteDatasource}
-                        scroll={{ y: 270 }}
+                    scroll={{ y: 270 }} 
+                    onRow={(record, rowIndex) => {
+                        return {
+                        onClick: event => {
+                            dispatch(
+                                filterSatellite(
+                                    baseListSatellite.filter((satellite) => {
+                                        return satellite.id === record.id
+                                    })
+                            ))
+                            }, // click row
+                        };
+                    }}
                     />
         </Modal>
         </>
