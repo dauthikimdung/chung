@@ -180,12 +180,12 @@ const Header = () => {
                 </Menu.Item>
             </Menu>
         );
-    const changeActionMode = () => {
-        dispatch(setInterfaceMapActionState(!interfaceMapActionState))
-        if(!interfaceMapActionState){
-            dispatch(setIndexPredictPoint(0))
-        }        
-    }
+    // const changeActionMode = () => {
+    //     dispatch(setInterfaceMapActionState(!interfaceMapActionState))
+    //     if(!interfaceMapActionState){
+    //         dispatch(setIndexPredictPoint(0))
+    //     }        
+    // }
     return (
         <div className='header'>
             <div className='text-header'>
@@ -196,9 +196,9 @@ const Header = () => {
                     <li onClick={showModalUpdate}>
                         Cập nhật dữ liệu
                     </li>
-                    <li onClick={changeActionMode}>
+                    {/* <li onClick={changeActionMode}>
                         { interfaceMapActionState ? "Chọn 1 điểm" : "Chọn nhiều điểm"}
-                    </li>
+                    </li> */}
                     <li>
                         {/* <Dropdown overlay={menu} placement='bottomLeft' arrow>
                             <div style={{ display: 'flex', alignItems: 'center' }} onClick={() => console.log(indexPredictPoint, interfaceMapActionState)}>

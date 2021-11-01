@@ -30,7 +30,7 @@ const positionSlice = createSlice({
         // Danh sách các điểm để dự đoán vệ tinh đi qua 
         listPredictPoint: [],
         // Quy định giao diện chọn 1 điểm hay nhiều điểm: true : 1 điểm, false: nhiều điểm
-        interfaceMapActionState: true,
+        interfaceMapActionState: false,
         // Điểm đang lựa chọn
         indexPredictPoint: 0,
         // Tọa độ muốn tiên đoán - Tọa độ muốn kiểm tra các vệ tinh sẽ đi qua trong khoảng thời gian ==> coordinateOfMarkers[0]
