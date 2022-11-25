@@ -34,7 +34,17 @@ CORS(app)
 client = MongoClient(dbUrl, ssl=True, ssl_cert_reqs='CERT_NONE')
 mongo = client.get_database(dbName)
 # geopy.geocoders.options.default_timeout = 7
-
+# lines = urllib.request.urlopen(url).read().splitlines()
+# lines = [l.decode("utf-8") for l in lines]
+# with open("..\\data.txt", encoding="utf-8",mode='w') as f:
+#     f.writelines(lines)
+import requests
+response = requests.get(url)
+data = response.text.splitlines()
+with open('../data.txt',mode='w') as f:
+    for l in data:
+        f.write(l)
+        f.write('\n')
 @app.route('/satellites', methods=['GET'])
 def get_all_satellites():
     satellites = mongo[collName]
@@ -122,10 +132,8 @@ def get_satellites_nation():
 
 @app.route('/satellites/track-all', methods=['POST'])
 def satellite_track_all():
-    try:
-        url = 'http://celestrak.com/NORAD/elements/active.txt'
+    try:        
         satellites = mongo[collName]
-        # file = urllib.request.urlopen(url).read().splitlines()
         local_filename ="..\\data.txt"
         f = open(local_filename, encoding="utf-8")
         file = f.readlines()
@@ -363,7 +371,6 @@ const = 0.01746031
 @app.route('/satellites/track-all-multipoint', methods=['POST'])
 def satellite_track_all_multipoint():
     try:
-        url = 'http://celestrak.com/NORAD/elements/active.txt'
         local_filename ="..\\data.txt"
         f = open(local_filename, encoding="utf-8")
         line = f.readlines()
