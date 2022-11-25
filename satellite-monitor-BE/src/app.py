@@ -191,7 +191,7 @@ def satellite_track_all():
                     else:
                         obs.date = ts
             except  Exception as e:
-                # print(str(e))
+                print(str(e))
                 continue
         f.close()
         response = json_util.dumps(result)
@@ -321,7 +321,7 @@ def orbit_stl(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1, t2,
         name_sate = " ".join(line[id - 2].split())
         id_str = line[id][2:7]  # lay ra id dang chuoi
         id_int = int(id_str)  # doi id sang dang integer
-        print(name_sate, id_int)
+        # print(name_sate, id_int)
         coordinates = []
         sorted_list = sorted([tr, tt, ts, t1, t2])
         satellite = satellites.find_one({'NORAD Number': id_int})
@@ -488,7 +488,7 @@ def orbit_stl_one(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1,
     #  kiểm tra điều kiện đi qua các đỉnh của vùng và tính toán
     if max(distance) <= radius:
         name_sate = " ".join(line[i - 2].split())
-        print(name_sate, i)
+        # print(name_sate, i)
         coordinates = []
 
         #  chia khoảng thời gian
@@ -502,11 +502,13 @@ def orbit_stl_one(line, obs_center, stl, obs1, obs2, obs3, obs4, tr, tt, ts, t1,
         for x in sorted_list:
             obs_center.date = x  # thời gian tại vị trí quan sát
             stl.compute(obs_center)  # tính toán ở vị trí quan sát tại thời gian trên
+            sublat2 = math.degrees(stl.sublat)
+            sublong2 = math.degrees(stl.sublong)
             trvn = ephem.Date(x + 7 * ephem.hour)
             str_trvn = "%s" % (trvn)
             # Lấy địa điểm
             locator = Nominatim(user_agent='myGeocoder')
-            coordinate = '%s, %s' % (str(sublat), str(sublong))
+            coordinate = '%s, %s' % (str(sublat2), str(sublong2))
             location = locator.reverse(coordinate)
             locate = ""
             try:
@@ -573,7 +575,7 @@ def satellite_track_one_multipoint():
             id_int = int(id_str)
             if id_int == id:
                 temp = {} # chinh gio ve hien tai ve gio utc
-                print(id_int)
+                # print(id_int)
                 stl = ephem.readtle(line[i - 2], line[i - 1], line[i])
                 obs_center.date = datetime.datetime.utcnow()  # chinh gio ve hien tai ve gio utc
                 try:
@@ -623,7 +625,7 @@ def satellite_track_one_multipoint():
                     pass
         f.close()
         response = json_util.dumps(result)
-        print(response)
+        # print(response)
         return Response(response, mimetype='application/json')
 
     except Exception as e:

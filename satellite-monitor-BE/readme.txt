@@ -1,3 +1,4 @@
+* Ở Forder satellite-monitor-BE
 step 1: clone repo
 -> git clone https://github.com/Diagru25/satellite-monitor-BE.git
 -> cd satellite-monitor-BE
@@ -19,4 +20,6 @@ step 5: cài đặt các thư viện
 step 6:
 -> cd src
 -> python app.py
-
+- Nếu cài rồi thì chỉ cần ở Forder satellite-monitor-BE: chạy step 3 và step 6
+* Ở Forder satellite-monitor-official
+chạy lệnh npm start
